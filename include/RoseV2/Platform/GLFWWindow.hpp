@@ -12,6 +12,7 @@ public:
     ~GLFWWindow() override;
 
     void pollEvents() override;
+    void swapBuffers() override;
     bool shouldClose() const override;
 
     uint32_t getWidth() const override;

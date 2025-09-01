@@ -28,6 +28,11 @@ if(ROSEV2_USE_GLFW)
     message(STATUS "RoseV2: Using GLFW backend")
 endif()
 
+if(ROSEV2_USE_OPENGL)
+    add_subdirectory(external/glad)
+    message(STATUS "RoseV2: Using OpenGL Graphics API")
+endif()
+
 # --- Collect Sources --- #
 set(ROSEV2_SOURCES
     src/RoseV2/Core/Application.cpp
@@ -37,12 +42,17 @@ set(ROSEV2_SOURCES
     src/RoseV2/ECS/LifetimeManager.cpp
 
     src/RoseV2/Graphics/Renderer.cpp
-    src/RoseV2/Graphics/OpenGLRenderer.cpp
 )
 
 if(ROSEV2_USE_GLFW)
     list(APPEND ROSEV2_SOURCES
         src/RoseV2/Platform/GLFWWindow.cpp
+    )
+endif()
+
+if(ROSEV2_USE_OPENGL)
+    list(APPEND ROSEV2_SOURCES
+        src/RoseV2/Graphics/OpenGLRenderer.cpp
     )
 endif()
 
@@ -61,6 +71,11 @@ target_include_directories(RoseV2 PUBLIC
 if(ROSEV2_USE_GLFW)
     target_compile_definitions(RoseV2 PUBLIC ROSEV2_USE_GLFW)
     target_link_libraries(RoseV2 PUBLIC glfw)
+endif()
+
+if(ROSEV2_USE_OPENGL)
+    target_compile_definitions(RoseV2 PUBLIC ROSEV2_USE_OPENGL)
+    target_link_libraries(RoseV2 PUBLIC glad)
 endif()
 
 # --- Platform-specific Linking --- #

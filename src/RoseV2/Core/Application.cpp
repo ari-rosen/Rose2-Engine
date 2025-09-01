@@ -22,18 +22,18 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     
     Logger::log(LogLevel::Info, "Creating window");
     m_Window = Window::create(title, width, height);
-    if (!m_Window) {
-        throw std::runtime_error("Failed to create Window");
-    }
     
-    Logger::log(LogLevel::Info, "Creating Renderer");
+    Logger::log(LogLevel::Info, "Creating renderer");
     m_Renderer = Graphics::Renderer::create();
+    m_Renderer->init();
 }
 
 void Application::run() {
     Logger::log(LogLevel::Info, "Application started");
     while (!m_Window->shouldClose()) {
         m_Window->pollEvents();
+
+        m_Window->swapBuffers();
     }
 }
 

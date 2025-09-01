@@ -33,7 +33,8 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Application2D.cpp
     src/RoseV2/Core/Window.cpp
     src/RoseV2/Core/Logger.cpp
-
+    
+    src/RoseV2/ECS/LifetimeManager.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -92,6 +93,7 @@ if(ROSEV2_BUILD_TESTS)
 
     add_executable(RoseV2Tests
         tests/ComponentManager.test.cpp
+        tests/LifetimeManager.test.cpp
     )
 
     target_link_libraries(RoseV2Tests

@@ -35,6 +35,9 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Logger.cpp
     
     src/RoseV2/ECS/LifetimeManager.cpp
+
+    src/RoseV2/Graphics/Renderer.cpp
+    src/RoseV2/Graphics/OpenGLRenderer.cpp
 )
 
 if(ROSEV2_USE_GLFW)

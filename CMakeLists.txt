@@ -13,6 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # --- Configurable Options --- #
 option(ROSEV2_BUILD_SHARED "Build RoseV2 as a shared library" ON)
 option(ROSEV2_USE_GLFW "Use GLFW as the window backend" ON)
+option(ROSEV2_BUILD_TESTS "Build RoseV2 unit tests" ON)
 
 # --- Dependencies --- #
 if(ROSEV2_USE_GLFW)
@@ -33,7 +34,6 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Window.cpp
     src/RoseV2/Core/Logger.cpp
 
-    src/RoseV2/ECS/ComponentArray.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -73,7 +73,33 @@ elseif(UNIX)
 endif()
 
 # --- PCH --- #
-
 target_precompile_headers(RoseV2 PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/include/RoseV2/pch.hpp"
 )
+
+# --- Tests --- #
+
+if(ROSEV2_BUILD_TESTS)
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG v1.17.0
+    )
+    FetchContent_MakeAvailable(googletest)
+
+    enable_testing()
+
+    add_executable(RoseV2Tests
+        tests/ComponentManager.test.cpp
+    )
+
+    target_link_libraries(RoseV2Tests
+        PRIVATE
+            RoseV2
+            gtest_main
+    )
+
+    include(GoogleTest)
+    gtest_discover_tests(RoseV2Tests)
+endif()

@@ -2,7 +2,8 @@
 
 #include "RoseV2/Core/Core.hpp"
 #include "RoseV2/Core/Window.hpp"
-#include <memory>
+
+#include "RoseV2/pch.hpp"
 
 namespace RoseV2::Core {
 

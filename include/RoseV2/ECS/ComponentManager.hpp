@@ -3,6 +3,8 @@
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/ECS/ComponentArray.hpp"
 
+#include "RoseV2/pch.hpp"
+
 namespace RoseV2::ECS {
 
 class ComponentManager {

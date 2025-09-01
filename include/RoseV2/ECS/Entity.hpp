@@ -1,11 +1,12 @@
 #pragma once
 
+#include "RoseV2/pch.hpp"
+
 namespace RoseV2::ECS {
 
-struct Entity {
-    uint32_t id;
-};
+using Entity = uint32_t;
 
 constexpr size_t MAX_COMPONENTS = 32;
 
 } // namespace RoseV2::ECS
+

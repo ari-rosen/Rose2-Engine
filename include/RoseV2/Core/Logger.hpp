@@ -1,5 +1,7 @@
 #pragma once
 
+#include "RoseV2/pch.hpp"
+
 namespace RoseV2::Core {
 
 enum class LogLevel {

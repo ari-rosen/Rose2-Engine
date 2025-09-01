@@ -1,0 +1,21 @@
+# Build folders
+/build/
+/out/
+/bin/
+/lib/
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDE files
+*.swp
+*.swo
+*.user
+*.idea/
+.vscode/
+.DS_Store
+
+# Catch2 vendored files (keep them tracked if you copied them in)

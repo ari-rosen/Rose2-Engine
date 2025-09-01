@@ -14,6 +14,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(ROSEV2_BUILD_SHARED "Build RoseV2 as a shared library" ON)
 option(ROSEV2_USE_GLFW "Use GLFW as the window backend" ON)
 option(ROSEV2_BUILD_TESTS "Build RoseV2 unit tests" ON)
+option(ROSEV2_USE_OPENGL "Use OpenGL as the Graphics API" ON)
 
 # --- Dependencies --- #
 if(ROSEV2_USE_GLFW)
@@ -30,7 +31,6 @@ endif()
 # --- Collect Sources --- #
 set(ROSEV2_SOURCES
     src/RoseV2/Core/Application.cpp
-    src/RoseV2/Core/Application2D.cpp
     src/RoseV2/Core/Window.cpp
     src/RoseV2/Core/Logger.cpp
     

@@ -1,3 +1,3 @@
 #pragma once
 
-#include "Core/Application2D.hpp"
+#include "Core/Application.hpp"

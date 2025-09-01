@@ -18,4 +18,10 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     }
 }
 
+void Application::run() {
+    while (!m_Window->shouldClose()) {
+        m_Window->pollEvents();
+    }
+}
+
 } // namespace RoseV2::Core

@@ -7,12 +7,12 @@
 
 namespace RoseV2::Core {
 
-class Application {
+class ROSE_V2_API Application {
 public:
     Application();
     Application(const std::string& title, uint32_t width, uint32_t height);
 
-    virtual void run() = 0;
+    void run();
 private:
     void init(const std::string& title, uint32_t width, uint32_t height);
 protected:

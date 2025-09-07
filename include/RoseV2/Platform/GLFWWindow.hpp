@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RoseV2/Core/Window.hpp"
+#include "RoseV2/Graphics/GraphicsContext.hpp"
 
 class GLFWwindow;
 
@@ -20,6 +21,8 @@ public:
 private:
     GLFWwindow *m_Handle;
     uint32_t m_Width, m_Height;
+    
+    std::unique_ptr<Graphics::GraphicsContext> m_Context;
 };
 
 }

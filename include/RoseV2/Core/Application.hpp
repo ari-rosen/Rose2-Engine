@@ -21,7 +21,6 @@ private:
     void init(const std::string& title, uint32_t width, uint32_t height);
 protected:
     std::unique_ptr<Window> m_Window;
-    std::unique_ptr<Graphics::GraphicsContext> m_GraphicsContext;
 };
 
 } // namespace RoseV2::Core

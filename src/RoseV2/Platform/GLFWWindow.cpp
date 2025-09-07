@@ -2,6 +2,7 @@
 #include "RoseV2/Core/Assert.hpp"
 
 #include "GLFW/glfw3.h"
+#include "RoseV2/Graphics/GraphicsContext.hpp"
 
 namespace RoseV2::Platform {
 
@@ -20,8 +21,11 @@ GLFWWindow::GLFWWindow(const std::string& title, uint32_t width, uint32_t height
    
     m_Handle = glfwCreateWindow(m_Width, m_Height, title.c_str(), nullptr, nullptr);
     ROSEV2_ASSERT(m_Handle, "Failed to Create GLFW Window"); 
-
+   
     glfwMakeContextCurrent(m_Handle);
+
+    m_Context = Graphics::GraphicsContext::create();
+    m_Context->init();
 }
 
 GLFWWindow::~GLFWWindow() {

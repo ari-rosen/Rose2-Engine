@@ -24,13 +24,10 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     Logger::log(LogLevel::Info, "Creating window");
     m_Window = Window::create(title, width, height);
     
-    Logger::log(LogLevel::Info, "Creating renderer");
-
     m_GraphicsContext = Graphics::GraphicsContext::create();
     m_GraphicsContext->init();
-
-    m_Renderer = Graphics::Renderer::create();
-    m_Renderer->init();
+    
+    Graphics::Renderer::init();
 }
 
 void Application::run() {
@@ -38,7 +35,9 @@ void Application::run() {
     while (!m_Window->shouldClose()) {
         m_Window->pollEvents();
 
-        m_Renderer->beginScene();
+        Graphics::Renderer::beginScene();
+        Graphics::Renderer::endScene();
+
 
         m_Window->swapBuffers();
     }

@@ -43,6 +43,8 @@ set(ROSEV2_SOURCES
     
     src/RoseV2/Graphics/GraphicsContext.cpp
     src/RoseV2/Graphics/Renderer.cpp
+    src/RoseV2/Graphics/RendererAPI.cpp
+    src/RoseV2/Graphics/RenderCommand.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -53,8 +55,8 @@ endif()
 
 if(ROSEV2_USE_OPENGL)
     list(APPEND ROSEV2_SOURCES
-        src/RoseV2/Platform/OpenGL/OpenGLRenderer.cpp
         src/RoseV2/Platform/OpenGL/OpenGLGraphicsContext.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLRendererAPI.cpp
     )
 endif()
 

@@ -22,7 +22,6 @@ private:
 protected:
     std::unique_ptr<Window> m_Window;
     std::unique_ptr<Graphics::GraphicsContext> m_GraphicsContext;
-    std::unique_ptr<Graphics::Renderer> m_Renderer;
 };
 
 } // namespace RoseV2::Core

@@ -40,7 +40,8 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Logger.cpp
     
     src/RoseV2/ECS/LifetimeManager.cpp
-
+    
+    src/RoseV2/Graphics/GraphicsContext.cpp
     src/RoseV2/Graphics/Renderer.cpp
 )
 
@@ -52,7 +53,8 @@ endif()
 
 if(ROSEV2_USE_OPENGL)
     list(APPEND ROSEV2_SOURCES
-        src/RoseV2/Graphics/OpenGLRenderer.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLRenderer.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLGraphicsContext.cpp
     )
 endif()
 

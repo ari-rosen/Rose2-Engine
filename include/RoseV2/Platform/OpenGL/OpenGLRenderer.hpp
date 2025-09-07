@@ -2,14 +2,13 @@
 
 #include "RoseV2/Graphics/Renderer.hpp"
 
-namespace RoseV2::Graphics {
+namespace RoseV2::Platform::OpenGL {
 
-class OpenGLRenderer : public Renderer {
+class OpenGLRenderer : public Graphics::Renderer {
 public:
     void init() override;
     void beginScene() override;
     void submitSprite() override;
-    void renderScene() override;
     void endScene() override;
 };
 

@@ -1,5 +1,6 @@
 #include "RoseV2/Core/Application.hpp"
 #include "RoseV2/Core/Logger.hpp"
+#include "RoseV2/Graphics/GraphicsContext.hpp"
 #include "RoseV2/Graphics/Renderer.hpp"
 
 namespace RoseV2::Core {
@@ -24,6 +25,10 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     m_Window = Window::create(title, width, height);
     
     Logger::log(LogLevel::Info, "Creating renderer");
+
+    m_GraphicsContext = Graphics::GraphicsContext::create();
+    m_GraphicsContext->init();
+
     m_Renderer = Graphics::Renderer::create();
     m_Renderer->init();
 }
@@ -32,6 +37,8 @@ void Application::run() {
     Logger::log(LogLevel::Info, "Application started");
     while (!m_Window->shouldClose()) {
         m_Window->pollEvents();
+
+        m_Renderer->beginScene();
 
         m_Window->swapBuffers();
     }

@@ -11,7 +11,6 @@ public:
     virtual void init() = 0;
     virtual void beginScene() = 0;
     virtual void submitSprite() = 0;
-    virtual void renderScene() = 0;
     virtual void endScene() = 0;
 };
 

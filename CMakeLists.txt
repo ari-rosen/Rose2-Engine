@@ -45,6 +45,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/Renderer.cpp
     src/RoseV2/Graphics/RendererAPI.cpp
     src/RoseV2/Graphics/RenderCommand.cpp
+    src/RoseV2/Graphics/Shader.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -57,6 +58,7 @@ if(ROSEV2_USE_OPENGL)
     list(APPEND ROSEV2_SOURCES
         src/RoseV2/Platform/OpenGL/OpenGLGraphicsContext.cpp
         src/RoseV2/Platform/OpenGL/OpenGLRendererAPI.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLShader.cpp
     )
 endif()
 
@@ -81,6 +83,13 @@ if(ROSEV2_USE_OPENGL)
     target_compile_definitions(RoseV2 PUBLIC ROSEV2_USE_OPENGL)
     target_link_libraries(RoseV2 PUBLIC glad)
 endif()
+
+# --- Misc --- #
+target_include_directories(RoseV2 PUBLIC
+    ${PROJECT_SOURCE_DIR}/external/glm
+)
+
+target_compile_definitions(RoseV2 PUBLIC PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")
 
 # --- Platform-specific Linking --- #
 if(APPLE)

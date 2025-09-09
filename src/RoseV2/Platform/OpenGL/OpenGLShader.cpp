@@ -1,5 +1,6 @@
 
 #include "RoseV2/Platform/OpenGL/OpenGLShader.hpp"
+#include "RoseV2/Platform/OpenGL/OpenGLError.hpp"
 #include "RoseV2/Core/Logger.hpp"
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
@@ -22,16 +23,17 @@ std::string OpenGLShader::readFile(const std::filesystem::path& path) {
 }
 
 uint32_t OpenGLShader::compileShader(GLenum type, const std::string& source) {
-    uint32_t shader = glCreateShader(type);
+    uint32_t shader = 0;
+    GL_CALL(shader = glCreateShader(type));
     const char* src = source.c_str();
-    glShaderSource(shader, 1, &src, nullptr);
-    glCompileShader(shader);
+    GL_CALL(glShaderSource(shader, 1, &src, nullptr));
+    GL_CALL(glCompileShader(shader));
 
     int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+    GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
     if (!success) {
         char infoLog[512];
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        GL_CALL(glGetShaderInfoLog(shader, 512, nullptr, infoLog));
         Core::Logger::log(Core::LogLevel::Error,
             "Shader compilation failed (" + std::string(type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") + "): " + infoLog);
     }
@@ -53,22 +55,22 @@ OpenGLShader::OpenGLShader(const std::filesystem::path& vertexPath,
     uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, vertexSrc);
     uint32_t fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentSrc);
 
-    m_ProgramID = glCreateProgram();
-    glAttachShader(m_ProgramID, vertexShader);
-    glAttachShader(m_ProgramID, fragmentShader);
-    glLinkProgram(m_ProgramID);
+    GL_CALL(m_ProgramID = glCreateProgram());
+    GL_CALL(glAttachShader(m_ProgramID, vertexShader));
+    GL_CALL(glAttachShader(m_ProgramID, fragmentShader));
+    GL_CALL(glLinkProgram(m_ProgramID));
 
     int success;
-    glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &success);
+    GL_CALL(glGetProgramiv(m_ProgramID, GL_LINK_STATUS, &success));
     if (!success) {
         char infoLog[512];
-        glGetProgramInfoLog(m_ProgramID, 512, nullptr, infoLog);
+        GL_CALL(glGetProgramInfoLog(m_ProgramID, 512, nullptr, infoLog));
         Core::Logger::log(Core::LogLevel::Error,
             "Shader program linking failed: " + std::string(infoLog));
     }
 
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    GL_CALL(glDeleteShader(vertexShader));
+    GL_CALL(glDeleteShader(fragmentShader));
 }
 
 OpenGLShader::~OpenGLShader() {

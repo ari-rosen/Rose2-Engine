@@ -1,5 +1,6 @@
 #include "RoseV2/Graphics/Renderer.hpp"
 #include "RoseV2/Core/Logger.hpp"
+#include "RoseV2/Graphics/Buffer.hpp"
 #include "RoseV2/Graphics/RenderCommand.hpp"
 
 namespace RoseV2::Graphics {
@@ -20,7 +21,7 @@ void Renderer::beginScene() {
 }
 
 void Renderer::submitSprite() {
-
+    
 }
 
 void Renderer::endScene() {

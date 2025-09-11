@@ -40,6 +40,8 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Logger.cpp
     
     src/RoseV2/ECS/LifetimeManager.cpp
+    src/RoseV2/ECS/Registry.cpp
+    src/RoseV2/ECS/ComponentManager.cpp
     
     src/RoseV2/Graphics/GraphicsContext.cpp
     src/RoseV2/Graphics/Renderer.cpp

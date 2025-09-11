@@ -28,6 +28,8 @@ public:
     bool hasComponent(Entity e) {
         return getArray<T>().has(e);
     }
+
+    void entityDestroyed(Entity e);
 private:
     template<typename T>
     ComponentArray<T>& getArray() {

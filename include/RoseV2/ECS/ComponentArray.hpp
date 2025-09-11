@@ -10,6 +10,9 @@ namespace RoseV2::ECS {
 class iComponentArray {
 public:
     virtual ~iComponentArray() = default;
+
+    virtual void remove(Entity e) = 0;
+    virtual bool has(Entity e) const = 0;
 };
 
 template<typename T>
@@ -24,7 +27,7 @@ public:
         m_EntityToIndexMap[e] = index;
     }
     
-    void remove(Entity e) {
+    void remove(Entity e) override {
         ROSEV2_ASSERT(has(e), "Attempt to remove a nonexistent component");
         ROSEV2_ASSERT(!m_Components.empty(), "Attempt to remove a component from an empty array");
 
@@ -43,7 +46,7 @@ public:
         m_EntityToIndexMap.erase(it);
     }
 
-    bool has(Entity e) const {
+    bool has(Entity e) const override {
         return m_EntityToIndexMap.count(e) > 0;    
     }
 

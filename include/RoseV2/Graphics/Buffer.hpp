@@ -1,20 +1,33 @@
 #pragma once
 
+#include "RoseV2/Core/Core.hpp"
 namespace RoseV2::Graphics {
 
-struct BufferElement {
-    std::string Name;
-    uint32_t    Size;
-    uint32_t    Offset;
-    uint32_t    Location;
+enum class ShaderDataType {
+    Float, Float2, Float3, Float4, Mat3, Mat4, Int, Int2, Int3, Int4, Bool
 };
 
-struct BufferLayout {
+struct ROSE_V2_API BufferElement {
+    std::string    Name;
+    ShaderDataType Type;
+    uint32_t       Size;
+    uint32_t       Offset;
+    uint32_t       Location;
+    bool           Normalized;
+
+    BufferElement() = default;
+    BufferElement(ShaderDataType type, const std::string &name, bool normalized = false);
+};
+
+struct ROSE_V2_API BufferLayout {
     std::vector<BufferElement> Elements;
     uint32_t    Stride;
+
+    BufferLayout() = default;
+    BufferLayout(const std::initializer_list<BufferElement>& elements);
 };
 
-class VertexBuffer {
+class ROSE_V2_API VertexBuffer {
 public:
     virtual ~VertexBuffer() = default;
 
@@ -30,7 +43,7 @@ public:
     virtual void setBufferLayout(const BufferLayout &layout) = 0;
 };
 
-class IndexBuffer {
+class ROSE_V2_API IndexBuffer {
 public:
     virtual ~IndexBuffer() = default;
 

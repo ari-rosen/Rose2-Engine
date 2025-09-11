@@ -35,9 +35,7 @@ void Application::run() {
     while (!m_Window->shouldClose()) {
         m_Window->pollEvents();
 
-        Graphics::Renderer::beginScene();
-        Graphics::Renderer::endScene();
-
+        onRender();
 
         m_Window->swapBuffers();
     }

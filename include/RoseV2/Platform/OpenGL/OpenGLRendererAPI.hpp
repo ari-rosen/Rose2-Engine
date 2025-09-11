@@ -12,6 +12,7 @@ public:
     void setClearColor(float r, float g, float b) override;
     void clear() override;
 
+    void drawIndexed(const std::shared_ptr<Graphics::VertexArray> &vertexArray) override;
 };
 
 }

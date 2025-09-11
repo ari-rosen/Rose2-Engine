@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Graphics/VertexArray.hpp"
 namespace RoseV2::Graphics {
 
 class RendererAPI {
@@ -17,6 +18,8 @@ public:
     virtual void setScissor(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
     virtual void setClearColor(float r, float g, float b) = 0;
     virtual void clear() = 0;
+
+    virtual void drawIndexed(const std::shared_ptr<VertexArray> &vertexArray) = 0;
 
 protected:
     static API s_API;

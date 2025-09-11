@@ -1,10 +1,11 @@
 #pragma once
 
+#include "RoseV2/Core/Core.hpp"
 #include <glm/glm.hpp>
 
 namespace RoseV2::Graphics {
 
-class Shader {
+class ROSE_V2_API Shader {
 public:
     virtual ~Shader() = default;
 

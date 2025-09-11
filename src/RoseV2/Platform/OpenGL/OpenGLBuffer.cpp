@@ -33,7 +33,9 @@ void OpenGLVertexBuffer::setData(const void* data, uint32_t size) {
     GL_CALL(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
 }
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) {
+OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count) 
+    :m_Count(count)
+{
     GL_CALL(glGenBuffers(1, &m_IboID));
     GL_CALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IboID));
     GL_CALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW));

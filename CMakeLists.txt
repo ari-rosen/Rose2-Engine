@@ -47,6 +47,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/RenderCommand.cpp
     src/RoseV2/Graphics/Shader.cpp
     src/RoseV2/Graphics/Buffer.cpp
+    src/RoseV2/Graphics/VertexArray.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -61,6 +62,7 @@ if(ROSEV2_USE_OPENGL)
         src/RoseV2/Platform/OpenGL/OpenGLRendererAPI.cpp
         src/RoseV2/Platform/OpenGL/OpenGLShader.cpp
         src/RoseV2/Platform/OpenGL/OpenGLBuffer.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLVertexArray.cpp
     )
 endif()
 

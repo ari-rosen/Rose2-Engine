@@ -44,12 +44,16 @@ set(ROSEV2_SOURCES
     src/RoseV2/ECS/ComponentManager.cpp
     
     src/RoseV2/Graphics/GraphicsContext.cpp
+    src/RoseV2/Graphics/Camera.cpp
     src/RoseV2/Graphics/Renderer.cpp
     src/RoseV2/Graphics/RendererAPI.cpp
     src/RoseV2/Graphics/RenderCommand.cpp
     src/RoseV2/Graphics/Shader.cpp
     src/RoseV2/Graphics/Buffer.cpp
     src/RoseV2/Graphics/VertexArray.cpp
+    src/RoseV2/Graphics/UniformBuffer.cpp
+
+    src/RoseV2/Scene/Scene.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -65,6 +69,7 @@ if(ROSEV2_USE_OPENGL)
         src/RoseV2/Platform/OpenGL/OpenGLShader.cpp
         src/RoseV2/Platform/OpenGL/OpenGLBuffer.cpp
         src/RoseV2/Platform/OpenGL/OpenGLVertexArray.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLUniformBuffer.cpp
     )
 endif()
 

@@ -22,6 +22,8 @@ public:
     void setUniformVec4(const std::string& name, const glm::vec4& value) override;
     void setUniformMat3(const std::string& name, const glm::mat3& value) override;
     void setUniformMat4(const std::string& name, const glm::mat4& value) override;
+
+    void setUniformBinding(const std::string &name, const uint32_t binding) override;
 private:
     int getUniformLocation(const std::string& name) const;
     uint32_t compileShader(GLenum type, const std::string& source);

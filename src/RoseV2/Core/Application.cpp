@@ -15,6 +15,7 @@ Application::Application(const std::string& title, uint32_t width, uint32_t heig
 
 Application::~Application() {
     Logger::log(LogLevel::Info, "Application shutting down");
+    Graphics::Renderer::shutdown();
 }
 
 

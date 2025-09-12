@@ -26,6 +26,11 @@ public:
         return m_ComponentManager.hasComponent<T>(e);
     }
 
+    template<typename T>
+    T& getComponent(Entity e) {
+        return m_ComponentManager.getComponent<T>(e);
+    }
+
 private:
     LifetimeManager m_LifetimeManager;
     ComponentManager m_ComponentManager;

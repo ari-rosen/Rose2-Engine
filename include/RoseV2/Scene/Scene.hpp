@@ -1,10 +1,11 @@
 #pragma once
 
 #include "RoseV2/ECS/Registry.hpp"
+#include "RoseV2/Core/Core.hpp"
 
 namespace RoseV2::Scene {
 
-class Scene {
+class ROSE_V2_API Scene {
 public:
     Scene();
 
@@ -13,7 +14,7 @@ public:
     
     void onRuntimeUpdate();
    
-    inline const ECS::Registry& getRegistry() { return m_Registry; }
+    inline ECS::Registry& getRegistry() { return m_Registry; }
 private:
     bool m_IsRunning;
     ECS::Registry m_Registry;

@@ -1,25 +1,25 @@
 #pragma once
 
 #include "RoseV2/Core/Core.hpp"
-#include "RoseV2/Graphics/Shader.hpp"
-#include "RoseV2/Graphics/VertexArray.hpp"
+#include "RoseV2/ECS/Component.hpp"
+#include "RoseV2/Graphics/Camera.hpp"
 
 namespace RoseV2::Graphics {
 
 class ROSE_V2_API Renderer {
 public:
     static void init();
-    static void beginScene();
-    static void submitVertexArray(const std::shared_ptr<VertexArray> &vertexArray,
-                                  const std::shared_ptr<Shader> &shader);
+    static void shutdown();
+
+    static void beginScene(const Camera &camera);
+
+    static void submitQuad(const glm::mat4 &transform, const glm::vec4 &color);
+    static void submitSprite(const ECS::TransformComponent &transform, const ECS::SpriteComponent &sprite);
+
     static void endScene();
 private:
-    struct DrawCall {
-        std::shared_ptr<VertexArray> VertexArray;
-        std::shared_ptr<Shader>      Shader;
-    };
-private:
-    static std::vector<DrawCall> s_DrawQueue;
+    static void beginBatch();
+    static void flushBatch();
 };
 
 } // RoseV2::Graphics

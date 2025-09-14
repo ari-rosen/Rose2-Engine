@@ -30,9 +30,8 @@ void Camera::setZoom(float zoom) {
 
 void Camera::recalculateViewProjection() {
     glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(m_Position, 0.0f))
-                        * glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0,0,1))
-                        * glm::scale(glm::mat4(1.0f), glm::vec3(m_Zoom, m_Zoom, 1.0f));
-
+                    * glm::rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0,0,1))
+                    * glm::scale(glm::mat4(1.0f), glm::vec3(1.0f / m_Zoom, 1.0f / m_Zoom, 1.0f));
     m_View = glm::inverse(transform);
     m_ViewProjection = m_Projection * m_View;
 }

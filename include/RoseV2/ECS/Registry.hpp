@@ -31,6 +31,8 @@ public:
         return m_ComponentManager.getComponent<T>(e);
     }
 
+    const std::vector<Entity> &getAliveEntities() const;
+
 private:
     LifetimeManager m_LifetimeManager;
     ComponentManager m_ComponentManager;

@@ -11,7 +11,7 @@ GLFWWindow::GLFWWindow(const std::string& title, uint32_t width, uint32_t height
 {
     ROSEV2_ASSERT(glfwInit(), "Failed to Initialize GLFW");
 
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+    //glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 #ifdef __APPLE__
@@ -53,6 +53,10 @@ uint32_t GLFWWindow::getWidth() const {
 
 uint32_t GLFWWindow::getHeight() const {
     return m_Height;
+}
+
+void* GLFWWindow::getHandle() const {
+    return m_Handle;
 }
 
 } // namespace RoseV2::Platform

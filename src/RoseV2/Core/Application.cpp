@@ -33,6 +33,8 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
 
 void Application::run() {
     Logger::log(LogLevel::Info, "Application started");
+    initImGui();
+
     while (!m_Window->shouldClose()) {
         m_Window->pollEvents();
 

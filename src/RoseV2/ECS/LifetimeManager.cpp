@@ -9,23 +9,30 @@ LifetimeManager::LifetimeManager()
 {}
 
 Entity LifetimeManager::createEntity() {
+    Entity e;
     if (!m_RecycledIDs.empty()) {
-        Entity e = m_RecycledIDs.front();
+        e = m_RecycledIDs.front();
         m_RecycledIDs.pop();
-        m_AliveEntities[e] = true;
-        return e;
     }
     else {
-        Entity e = m_NextID++;
-        m_AliveEntities[e] = true;
-        return e;
+        e = m_NextID++;
     }
+
+    m_AliveEntities[e] = true;
+    m_AllEntities.push_back(e);
+
+    return e;
 }
 
 void LifetimeManager::destroyEntity(Entity e) {
     ROSEV2_ASSERT(isEntityAlive(e), "Attempt to destroy an Entity that doesn't exist");
     m_AliveEntities.erase(e);
     m_RecycledIDs.push(e);
+
+    auto it = std::find(m_AllEntities.begin(), m_AllEntities.end(), e);
+    if (it != m_AllEntities.end()) {
+        m_AllEntities.erase(it);
+    }
 }
 
 bool LifetimeManager::isEntityAlive(Entity e) const {

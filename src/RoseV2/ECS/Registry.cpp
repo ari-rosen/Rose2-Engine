@@ -12,4 +12,8 @@ void Registry::destroyEntity(Entity e) {
     m_ComponentManager.entityDestroyed(e);
 }
 
+const std::vector<Entity> &Registry::getAliveEntities() const {
+    return m_LifetimeManager.getEntities();
+}
+
 }

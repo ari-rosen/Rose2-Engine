@@ -6,6 +6,7 @@ namespace RoseV2::Graphics {
 
 class Camera {
 public:
+    Camera() = default;
     Camera(float left, float right, float bottom, float top);
 
     void setProjection(float left, float right, float bottom, float top);

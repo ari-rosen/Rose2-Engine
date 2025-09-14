@@ -13,7 +13,8 @@ public:
     ~Application();
 
     void run();
-
+    
+    virtual void initImGui() {};
     virtual void onRender() {};
 private:
     void init(const std::string& title, uint32_t width, uint32_t height);

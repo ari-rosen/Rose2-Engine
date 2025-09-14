@@ -18,6 +18,8 @@ public:
 
     uint32_t getWidth() const override;
     uint32_t getHeight() const override;
+
+    void* getHandle() const override;
 private:
     GLFWwindow *m_Handle;
     uint32_t m_Width, m_Height;

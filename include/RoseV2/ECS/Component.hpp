@@ -2,6 +2,7 @@
 
 #include <glm/glm.hpp>
 #include "RoseV2/Core/Core.hpp"
+#include "RoseV2/Graphics/Camera.hpp"
 #include "RoseV2/pch.hpp"
 
 namespace RoseV2::ECS {
@@ -18,6 +19,11 @@ struct ROSE_V2_API TransformComponent {
 
 struct ROSE_V2_API SpriteComponent {
     glm::vec4 Color = {1.0f, 1.0f, 1.0f, 1.0f};
+};
+
+struct ROSE_V2_API CameraComponent {
+    Graphics::Camera Camera;
+    bool Primary = true;
 };
 
 } // namespace RoseV2::ECS

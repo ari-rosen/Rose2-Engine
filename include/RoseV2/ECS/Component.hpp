@@ -22,7 +22,11 @@ struct ROSE_V2_API SpriteComponent {
 };
 
 struct ROSE_V2_API CameraComponent {
-    Graphics::Camera Camera;
+    float Zoom;
+    float Left = -1.0f;
+    float Right = 1.0f;
+    float Bottom = -1.0f;
+    float Top = 1.0f;
     bool Primary = true;
 };
 

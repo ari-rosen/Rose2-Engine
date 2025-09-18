@@ -27,7 +27,7 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     
     Logger::log(LogLevel::Info, "Creating window");
     m_Window = Window::create(title, width, height);
-    
+
     Graphics::Renderer::init();
 }
 

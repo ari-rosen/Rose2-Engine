@@ -38,6 +38,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Application.cpp
     src/RoseV2/Core/Window.cpp
     src/RoseV2/Core/Logger.cpp
+    src/RoseV2/Core/AssetManager.cpp
     
     src/RoseV2/ECS/LifetimeManager.cpp
     src/RoseV2/ECS/Registry.cpp
@@ -53,6 +54,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/VertexArray.cpp
     src/RoseV2/Graphics/UniformBuffer.cpp
     src/RoseV2/Graphics/Framebuffer.cpp
+    src/RoseV2/Graphics/Texture.cpp
 
     src/RoseV2/Scene/Scene.cpp
 )
@@ -72,6 +74,7 @@ if(ROSEV2_USE_OPENGL)
         src/RoseV2/Platform/OpenGL/OpenGLVertexArray.cpp
         src/RoseV2/Platform/OpenGL/OpenGLUniformBuffer.cpp
         src/RoseV2/Platform/OpenGL/OpenGLFramebuffer.cpp
+        src/RoseV2/Platform/OpenGL/OpenGLTexture.cpp
     )
 endif()
 
@@ -100,6 +103,7 @@ endif()
 # --- Misc --- #
 target_include_directories(RoseV2 PUBLIC
     ${PROJECT_SOURCE_DIR}/external/glm
+    ${PROJECT_SOURCE_DIR}/external/stb/include
 )
 
 target_compile_definitions(RoseV2 PUBLIC PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Core/AssetManager.hpp"
 #include "RoseV2/Core/Core.hpp"
 #include "RoseV2/Core/Window.hpp"
 
@@ -13,8 +14,8 @@ public:
     ~Application();
 
     void run();
-    
-    virtual void initImGui() {};
+
+    virtual void initImGui() {}; // for editor
     virtual void onRender() {};
 private:
     void init(const std::string& title, uint32_t width, uint32_t height);

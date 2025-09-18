@@ -129,6 +129,12 @@ void OpenGLShader::setUniformMat4(const std::string& name, const glm::mat4& valu
     glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void OpenGLShader::setUniformIntArray(const std::string &name, int *values, uint32_t count) {
+    GLint location = glGetUniformLocation(m_ProgramID, name.c_str());
+    glUniform1iv(location, count, values);
+}
+
+
 void OpenGLShader::setUniformBinding(const std::string &name, const uint32_t binding) {
     GLuint blockIndex = glGetUniformBlockIndex(m_ProgramID, name.c_str());
     if (blockIndex == GL_INVALID_INDEX) {

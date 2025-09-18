@@ -19,6 +19,7 @@ struct ROSE_V2_API TransformComponent {
 
 struct ROSE_V2_API SpriteComponent {
     glm::vec4 Color = {1.0f, 1.0f, 1.0f, 1.0f};
+    uint32_t TextureID = 0;
 };
 
 struct ROSE_V2_API CameraComponent {

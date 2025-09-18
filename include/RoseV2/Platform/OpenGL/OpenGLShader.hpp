@@ -23,6 +23,8 @@ public:
     void setUniformMat3(const std::string& name, const glm::mat3& value) override;
     void setUniformMat4(const std::string& name, const glm::mat4& value) override;
 
+    void setUniformIntArray(const std::string &name, int *values, uint32_t count) override;
+
     void setUniformBinding(const std::string &name, const uint32_t binding) override;
 private:
     int getUniformLocation(const std::string& name) const;

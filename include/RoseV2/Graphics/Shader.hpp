@@ -22,6 +22,8 @@ public:
     virtual void setUniformMat3(const std::string& name, const glm::mat3& value) = 0;
     virtual void setUniformMat4(const std::string& name, const glm::mat4& value) = 0;
 
+    virtual void setUniformIntArray(const std::string& name, int* values, uint32_t count) = 0;
+
     virtual void setUniformBinding(const std::string &name, const uint32_t binding) = 0;
 
 };

@@ -4,9 +4,22 @@
 
 namespace RoseV2::ECS {
 
-using Entity = uint32_t;
+struct Entity {
+    uint32_t id;
+    uint32_t generation;
 
-constexpr size_t MAX_COMPONENTS = 32;
+    bool operator==(const Entity &other) const {
+        return id == other.id && generation == other.generation;
+    }
+
+    static Entity Null() { return {UINT32_MAX, 0}; }
+};
+
+struct EntityHash {
+    std::size_t operator()(const Entity& e) const noexcept {
+        return std::hash<uint32_t>()(e.id) ^ (std::hash<uint32_t>()(e.generation) << 1);
+    }
+};
 
 } // namespace RoseV2::ECS
 

@@ -142,6 +142,7 @@ if(ROSEV2_BUILD_TESTS)
     add_executable(RoseV2Tests
         tests/ComponentManager.test.cpp
         tests/LifetimeManager.test.cpp
+        tests/Registry.test.cpp
     )
 
     target_link_libraries(RoseV2Tests

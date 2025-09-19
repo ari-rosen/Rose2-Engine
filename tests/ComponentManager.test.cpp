@@ -7,7 +7,7 @@ using namespace RoseV2::ECS;
 
 TEST(ECSComponentManagerTests, AddGetComponent) {
     ComponentManager manager;
-    Entity e1 = 0;
+    Entity e1 = {0,0};
     
     TransformComponent t{{10.0f, 20.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}};
     manager.addComponent(e1, t);
@@ -25,7 +25,7 @@ TEST(ECSComponentManagerTests, AddGetComponent) {
 
 TEST(ECSComponentManagerTests, RemoveComponent) {
     ComponentManager manager;
-    Entity e1 = 0;
+    Entity e1 = {0,0};
 
     TransformComponent t{{5.0f, 15.0f, 0.0f}};
     manager.addComponent(e1, t);
@@ -36,9 +36,9 @@ TEST(ECSComponentManagerTests, RemoveComponent) {
 
 TEST(ECSComponentManagerTests, MultipleEntities) {
     ComponentManager manager;
-    Entity e1 = 0;
-    Entity e2 = 1;
-    Entity e3 = 2;
+    Entity e1 = {0,0};
+    Entity e2 = {1,0};
+    Entity e3 = {2,0};
     
     manager.addComponent<TransformComponent>(e1, {{10.0f, 10.0f, 0.0f}});
     manager.addComponent<TransformComponent>(e2, {{20.0f, 20.0f, 0.0f}});
@@ -51,7 +51,7 @@ TEST(ECSComponentManagerTests, MultipleEntities) {
 
 TEST(ECSComponentManagerTests, MultipleComponents) {
     ComponentManager manager;
-    Entity e1 = 0;
+    Entity e1 = {0,0};
 
     struct TestComponent {
         int32_t testData;
@@ -67,9 +67,9 @@ TEST(ECSComponentManagerTests, MultipleComponents) {
 TEST(ECSComponentManagerTests, MultipleEntitiesComponentsRemove) {
     ComponentManager manager;
 
-    Entity e1 = 0;
-    Entity e2 = 1;
-    Entity e3 = 2;
+    Entity e1 = {0,0};
+    Entity e2 = {1,0};
+    Entity e3 = {2,0};
 
     struct Velocity {
         float vx, vy;

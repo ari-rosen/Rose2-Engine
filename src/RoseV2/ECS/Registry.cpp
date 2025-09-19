@@ -8,12 +8,12 @@ Entity Registry::createEntity() {
 }
 
 void Registry::destroyEntity(Entity e) {
-    m_LifetimeManager.destroyEntity(e);
     m_ComponentManager.entityDestroyed(e);
+    m_LifetimeManager.destroyEntity(e);
 }
 
-const std::vector<Entity> &Registry::getAliveEntities() const {
-    return m_LifetimeManager.getEntities();
+bool Registry::isEntityAlive(Entity e) {
+    return m_LifetimeManager.isEntityAlive(e);
 }
 
 }

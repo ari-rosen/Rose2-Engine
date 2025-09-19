@@ -29,6 +29,41 @@ public:
         return getArray<T>().has(e);
     }
 
+
+    template<typename... T>
+    std::vector<Entity> view() {
+        std::vector<Entity> entities;
+        entities.reserve(256);
+
+        std::initializer_list<std::type_index> types = { std::type_index(typeid(T))... };
+        std::unique_ptr<iComponentArray>* smallestArray = nullptr;
+        
+        for (const auto& type : types) {
+            auto it = m_ComponentArrays.find(type);
+            if (it != m_ComponentArrays.end()) {
+                if (!smallestArray || it->second->size() < (*smallestArray)->size()) {
+                    smallestArray = &it->second;
+                }
+            }
+        }
+
+        if (!smallestArray) {
+            return entities;
+        }
+
+        auto& firstArray = getArray<std::tuple_element_t<0, std::tuple<T...>>>();
+        
+        for (const auto& pair : firstArray.getEntityToIndexMap()) {
+            Entity e = firstArray.getOwner(pair.second);
+            
+            if (hasAllComponents<T...>(e)) {
+                entities.push_back(e);
+            }
+        }
+        
+        return entities;
+    }
+
     void entityDestroyed(Entity e);
 private:
     template<typename T>
@@ -37,6 +72,17 @@ private:
         if (!m_ComponentArrays[type])
             m_ComponentArrays[type] = std::make_unique<ComponentArray<T>>();
         return *static_cast<ComponentArray<T>*>(m_ComponentArrays[type].get());
+    }
+
+    template<typename First, typename... Rest>
+    bool hasAllComponents(Entity e) {
+        if (!hasComponent<First>(e)) {
+            return false;
+        }
+        if constexpr (sizeof...(Rest) > 0) {
+            return hasAllComponents<Rest...>(e);
+        }
+        return true;
     }
 private:
     std::unordered_map<std::type_index, std::unique_ptr<iComponentArray>> m_ComponentArrays;

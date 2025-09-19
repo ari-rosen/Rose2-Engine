@@ -15,13 +15,10 @@ public:
 
     bool isEntityAlive(Entity e) const;
     
-    const std::vector<Entity>& getEntities() const { return m_AllEntities; }
 private:
-    Entity m_NextID;
-    std::queue<Entity> m_RecycledIDs;
-    std::unordered_map<Entity, bool> m_AliveEntities;
-
-    std::vector<Entity> m_AllEntities;
+    uint32_t m_NextID;
+    std::queue<uint32_t> m_RecycledIDs;
+    std::unordered_map<uint32_t, uint32_t> m_IdToAliveGeneration{};
 };
 
 } // namespace RoesV2::ECS

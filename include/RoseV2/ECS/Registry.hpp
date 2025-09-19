@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Core/Assert.hpp"
 #include "RoseV2/ECS/ComponentManager.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/ECS/LifetimeManager.hpp"
@@ -13,6 +14,7 @@ public:
 
     template<typename T>
     void addComponent(Entity e, const T& component) {
+        ROSEV2_ASSERT(m_LifetimeManager.isEntityAlive(e), "Attempt to add a component to a destroyed entity");
         m_ComponentManager.addComponent(e, component);
     }
 
@@ -31,8 +33,12 @@ public:
         return m_ComponentManager.getComponent<T>(e);
     }
 
-    const std::vector<Entity> &getAliveEntities() const;
+    bool isEntityAlive(Entity e);
 
+    template<typename... T>
+    std::vector<Entity> view() {
+        return m_ComponentManager.view<T...>();
+    }
 private:
     LifetimeManager m_LifetimeManager;
     ComponentManager m_ComponentManager;

@@ -23,7 +23,7 @@ struct ROSE_V2_API SpriteComponent {
 };
 
 struct ROSE_V2_API CameraComponent {
-    float Zoom;
+    float Zoom = 1.0f;
     float Left = -1.0f;
     float Right = 1.0f;
     float Bottom = -1.0f;

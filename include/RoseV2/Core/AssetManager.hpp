@@ -12,6 +12,7 @@ public:
     uint32_t loadTexture(const std::filesystem::path &path);
     void unloadTexture(uint32_t id);
     std::shared_ptr<Graphics::Texture> getTexture(uint32_t id);
+    std::string getTexturePath(uint32_t id) const;
 
     inline uint32_t getLoadedTexturesCount() const { return m_Textures.size(); }
 private:

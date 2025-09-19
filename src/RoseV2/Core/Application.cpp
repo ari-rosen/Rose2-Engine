@@ -29,19 +29,28 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     m_Window = Window::create(title, width, height);
 
     Graphics::Renderer::init();
+
+    m_Running = true;
 }
 
 void Application::run() {
     Logger::log(LogLevel::Info, "Application started");
     initImGui();
 
-    while (!m_Window->shouldClose()) {
+    while (m_Running) {
         m_Window->pollEvents();
 
         onRender();
 
         m_Window->swapBuffers();
+
+        if (m_Window->shouldClose())
+            stop();
     }
+}
+
+void Application::stop() {
+    m_Running = false;
 }
 
 } // namespace RoseV2::Core

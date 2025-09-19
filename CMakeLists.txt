@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 4.0)
 project(RoseV2 VERSION 1.0 LANGUAGES CXX)
 
 # --- Global Settings --- #
@@ -9,6 +9,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+cmake_policy(SET CMP0074 NEW)
+cmake_policy(SET CMP0054 NEW)  # Optional, avoids some string comparisons warnings
+cmake_policy(SET CMP0077 NEW)  # Allow options to be set via cache
 
 # --- Configurable Options --- #
 option(ROSEV2_BUILD_SHARED "Build RoseV2 as a shared library" ON)
@@ -57,6 +61,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/Texture.cpp
 
     src/RoseV2/Scene/Scene.cpp
+    src/RoseV2/Scene/SceneSerializer.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -104,6 +109,7 @@ endif()
 target_include_directories(RoseV2 PUBLIC
     ${PROJECT_SOURCE_DIR}/external/glm
     ${PROJECT_SOURCE_DIR}/external/stb/include
+    ${PROJECT_SOURCE_DIR}/external/json/
 )
 
 target_compile_definitions(RoseV2 PUBLIC PROJECT_SOURCE_DIR="${PROJECT_SOURCE_DIR}")

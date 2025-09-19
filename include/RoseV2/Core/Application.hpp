@@ -14,6 +14,7 @@ public:
     ~Application();
 
     void run();
+    void stop();
 
     virtual void initImGui() {}; // for editor
     virtual void onRender() {};
@@ -21,6 +22,7 @@ private:
     void init(const std::string& title, uint32_t width, uint32_t height);
 protected:
     std::unique_ptr<Window> m_Window;
+    bool m_Running;
 };
 
 } // namespace RoseV2::Core

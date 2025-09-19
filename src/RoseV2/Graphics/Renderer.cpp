@@ -171,10 +171,11 @@ void Renderer::beginScene(const Camera &camera) {
 void Renderer::submitQuad(const glm::mat4 &transform, const glm::vec4 &color, uint32_t texIndex) {
     s_Data.QuadIndexCount += 6;
     constexpr glm::vec2 texCoords[] = {
+        {1.0f, 0.0f},  // top-right
+        {0.0f, 0.0f},   // top-left
         {0.0f, 1.0f},  // bottom-left
         {1.0f, 1.0f},  // bottom-right
-        {1.0f, 0.0f},  // top-right
-        {0.0f, 0.0f}   // top-left
+ 
     };
     constexpr size_t quadVertexCount = 4;
 

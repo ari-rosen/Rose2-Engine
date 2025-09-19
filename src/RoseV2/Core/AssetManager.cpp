@@ -49,4 +49,12 @@ std::shared_ptr<Graphics::Texture> AssetManager::getTexture(uint32_t id) {
     return nullptr;
 }
 
+std::string AssetManager::getTexturePath(uint32_t id) const {
+    for (const auto& [path, storedID] : m_TexturePathToID) {
+        if (storedID == id)
+            return path;
+    }
+    return {};
+}
+
 }

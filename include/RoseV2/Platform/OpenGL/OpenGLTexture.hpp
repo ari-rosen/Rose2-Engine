@@ -19,6 +19,8 @@ public:
     uint32_t getWidth() const override;
     uint32_t getHeight() const override;
     Graphics::TextureFormat getFormat() const override;
+
+    uint32_t getRendererID() const override { return m_RendererID; }
 private:
     uint32_t m_RendererID;
     uint32_t m_Width;

@@ -4,13 +4,17 @@
 #include "RoseV2/ECS/ComponentManager.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/ECS/LifetimeManager.hpp"
+#include "RoseV2/ECS/View.hpp"
 
 namespace RoseV2::ECS {
 
 class Registry {
 public:
+    Registry();
+
     Entity createEntity();
     void destroyEntity(Entity e);
+    bool isEntityAlive(Entity e);
 
     template<typename T>
     void addComponent(Entity e, const T& component) {
@@ -33,11 +37,9 @@ public:
         return m_ComponentManager.getComponent<T>(e);
     }
 
-    bool isEntityAlive(Entity e);
-
-    template<typename... T>
-    std::vector<Entity> view() {
-        return m_ComponentManager.view<T...>();
+    template<typename... Components>
+    View<Components...> view() {
+        return View<Components...>(&m_ComponentManager);
     }
 private:
     LifetimeManager m_LifetimeManager;

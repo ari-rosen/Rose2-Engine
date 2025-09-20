@@ -9,7 +9,7 @@ TEST(ECSComponentManagerTests, AddGetComponent) {
     ComponentManager manager;
     Entity e1 = {0,0};
     
-    TransformComponent t{{10.0f, 20.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {1.0f, 1.0f, 1.0f}};
+    TransformComponent t{glm::vec3(10.0f, 20.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f)};
     manager.addComponent(e1, t);
 
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e1));
@@ -27,7 +27,7 @@ TEST(ECSComponentManagerTests, RemoveComponent) {
     ComponentManager manager;
     Entity e1 = {0,0};
 
-    TransformComponent t{{5.0f, 15.0f, 0.0f}};
+    TransformComponent t{glm::vec3(5.0f, 15.0f, 0.0f)};
     manager.addComponent(e1, t);
     manager.removeComponent<TransformComponent>(e1);
 
@@ -40,9 +40,9 @@ TEST(ECSComponentManagerTests, MultipleEntities) {
     Entity e2 = {1,0};
     Entity e3 = {2,0};
     
-    manager.addComponent<TransformComponent>(e1, {{10.0f, 10.0f, 0.0f}});
-    manager.addComponent<TransformComponent>(e2, {{20.0f, 20.0f, 0.0f}});
-    manager.addComponent<TransformComponent>(e3, {{30.0f, 30.0f, 0.0f}});
+    manager.addComponent<TransformComponent>(e1, {glm::vec3(10.0f, 10.0f, 0.0f)});
+    manager.addComponent<TransformComponent>(e2, {glm::vec3(20.0f, 20.0f, 0.0f)});
+    manager.addComponent<TransformComponent>(e3, {glm::vec3(30.0f, 30.0f, 0.0f)});
     
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e1));
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e2));
@@ -53,15 +53,11 @@ TEST(ECSComponentManagerTests, MultipleComponents) {
     ComponentManager manager;
     Entity e1 = {0,0};
 
-    struct TestComponent {
-        int32_t testData;
-    };
-
-    manager.addComponent<TransformComponent>(e1, {{100.0f, 100.0f, 0.0f}});
-    manager.addComponent<TestComponent>(e1, {250});
+    manager.addComponent<TransformComponent>(e1, {glm::vec3(100.0f, 100.0f, 0.0f)});
+    manager.addComponent<SpriteComponent>(e1, {});
     
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e1));
-    ASSERT_TRUE(manager.hasComponent<TestComponent>(e1));
+    ASSERT_TRUE(manager.hasComponent<SpriteComponent>(e1));
 }
 
 TEST(ECSComponentManagerTests, MultipleEntitiesComponentsRemove) {
@@ -71,26 +67,22 @@ TEST(ECSComponentManagerTests, MultipleEntitiesComponentsRemove) {
     Entity e2 = {1,0};
     Entity e3 = {2,0};
 
-    struct Velocity {
-        float vx, vy;
-    };
+    manager.addComponent<TransformComponent>(e1, {glm::vec3(10.0f, 20.0f, 0.0f)});
+    manager.addComponent<SpriteComponent>(e1, {glm::vec4(1.0f, 0.0f, 0.0f, 1.0f)});
 
-    manager.addComponent<TransformComponent>(e1, {{10.0f, 20.0f, 0.0f}});
-    manager.addComponent<Velocity>(e1, {1.0f, 2.0f});
-
-    manager.addComponent<TransformComponent>(e2, {{30.0f, 40.0f, 0.0f}});
-    manager.addComponent<Velocity>(e3, {5.0f, 6.0f});
+    manager.addComponent<TransformComponent>(e2, {glm::vec3(30.0f, 40.0f, 0.0f)});
+    manager.addComponent<SpriteComponent>(e3, {glm::vec4(0.0f, 1.0f, 0.0f, 1.0f)});
 
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e1));
-    ASSERT_TRUE(manager.hasComponent<Velocity>(e1));
+    ASSERT_TRUE(manager.hasComponent<SpriteComponent>(e1));
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e2));
-    ASSERT_TRUE(manager.hasComponent<Velocity>(e3));
+    ASSERT_TRUE(manager.hasComponent<SpriteComponent>(e3));
 
     manager.removeComponent<TransformComponent>(e1);
-    manager.removeComponent<Velocity>(e3);
+    manager.removeComponent<SpriteComponent>(e3);
 
     ASSERT_FALSE(manager.hasComponent<TransformComponent>(e1));
-    ASSERT_TRUE(manager.hasComponent<Velocity>(e1));  // still exists
+    ASSERT_TRUE(manager.hasComponent<SpriteComponent>(e1));
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e2));
-    ASSERT_FALSE(manager.hasComponent<Velocity>(e3)); // removed
+    ASSERT_FALSE(manager.hasComponent<SpriteComponent>(e3));
 }

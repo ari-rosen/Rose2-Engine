@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Core/Assert.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/ECS/ComponentArray.hpp"
 
@@ -25,54 +26,30 @@ public:
     }
 
     template<typename T>
+    const T& getComponent(Entity e) const {
+        return getArray<T>().get(e);
+    }
+
+    template<typename T>
     bool hasComponent(Entity e) {
         return getArray<T>().has(e);
     }
 
+    template<typename ...T>
+    const iComponentArray* getSmallestArray() const {
+        const iComponentArray* smallestArray = nullptr;
+        std::initializer_list<const iComponentArray*> arrays = {&getArray<T>()...};
 
-    template<typename... T>
-    std::vector<Entity> view() {
-        std::vector<Entity> entities;
-        entities.reserve(256);
-
-        std::initializer_list<std::type_index> types = { std::type_index(typeid(T))... };
-        std::unique_ptr<iComponentArray>* smallestArray = nullptr;
-        
-        for (const auto& type : types) {
-            auto it = m_ComponentArrays.find(type);
-            if (it != m_ComponentArrays.end()) {
-                if (!smallestArray || it->second->size() < (*smallestArray)->size()) {
-                    smallestArray = &it->second;
-                }
+        for (const auto* array : arrays) {
+            if (!smallestArray || array->size() < smallestArray->size()) {
+                smallestArray = array;
             }
         }
 
-        if (!smallestArray) {
-            return entities;
-        }
-
-        auto& firstArray = getArray<std::tuple_element_t<0, std::tuple<T...>>>();
-        
-        for (const auto& pair : firstArray.getEntityToIndexMap()) {
-            Entity e = firstArray.getOwner(pair.second);
-            
-            if (hasAllComponents<T...>(e)) {
-                entities.push_back(e);
-            }
-        }
-        
-        return entities;
+        return smallestArray;
     }
 
     void entityDestroyed(Entity e);
-private:
-    template<typename T>
-    ComponentArray<T>& getArray() {
-        auto type = std::type_index(typeid(T));
-        if (!m_ComponentArrays[type])
-            m_ComponentArrays[type] = std::make_unique<ComponentArray<T>>();
-        return *static_cast<ComponentArray<T>*>(m_ComponentArrays[type].get());
-    }
 
     template<typename First, typename... Rest>
     bool hasAllComponents(Entity e) {
@@ -83,6 +60,19 @@ private:
             return hasAllComponents<Rest...>(e);
         }
         return true;
+    }
+
+    template<typename T>
+    ComponentArray<T>& getArray() {
+        auto type = std::type_index(typeid(T));
+        if (!m_ComponentArrays[type])
+            m_ComponentArrays[type] = std::make_unique<ComponentArray<T>>();
+        return *static_cast<ComponentArray<T>*>(m_ComponentArrays[type].get());
+    }
+    template<typename T>
+    const ComponentArray<T>& getArray() const {
+        auto type = std::type_index(typeid(T));
+        return *static_cast<ComponentArray<T>*>(m_ComponentArrays.at(type).get());
     }
 private:
     std::unordered_map<std::type_index, std::unique_ptr<iComponentArray>> m_ComponentArrays;

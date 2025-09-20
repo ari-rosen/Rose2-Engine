@@ -1,7 +1,15 @@
 #include "RoseV2/ECS/Registry.hpp"
+#include "RoseV2/ECS/Component.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 
 namespace RoseV2::ECS {
+
+Registry::Registry() {
+    m_ComponentManager.getArray<TransformComponent>();
+    m_ComponentManager.getArray<SpriteComponent>();
+    m_ComponentManager.getArray<TagComponent>();
+    m_ComponentManager.getArray<CameraComponent>();
+}
 
 Entity Registry::createEntity() {
     return m_LifetimeManager.createEntity();

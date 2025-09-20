@@ -44,6 +44,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Logger.cpp
     src/RoseV2/Core/AssetManager.cpp
     
+    src/RoseV2/ECS/ComponentArray.cpp
     src/RoseV2/ECS/LifetimeManager.cpp
     src/RoseV2/ECS/Registry.cpp
     src/RoseV2/ECS/ComponentManager.cpp
@@ -59,6 +60,8 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/UniformBuffer.cpp
     src/RoseV2/Graphics/Framebuffer.cpp
     src/RoseV2/Graphics/Texture.cpp
+    
+    src/RoseV2/Project/ProjectSerializer.cpp
 
     src/RoseV2/Scene/Scene.cpp
     src/RoseV2/Scene/SceneSerializer.cpp

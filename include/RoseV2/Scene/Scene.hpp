@@ -15,8 +15,12 @@ public:
     void onRuntimeUpdate();
    
     inline ECS::Registry& getRegistry() { return m_Registry; }
+    
+    const std::string &getName() const { return m_Name; }
+    void setName(const std::string &name) { m_Name = name; }
 private:
     bool m_IsRunning;
+    std::string m_Name;
     ECS::Registry m_Registry;
 };
 

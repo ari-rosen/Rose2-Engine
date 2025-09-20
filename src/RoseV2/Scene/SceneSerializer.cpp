@@ -47,7 +47,8 @@ void SceneSerializer::serialize(const std::filesystem::path &filepath) {
             entityJson["CameraComponent"]["Top"] = c.Top;
             entityJson["CameraComponent"]["Primary"] = c.Primary;
         }
-
+        
+        j["Name"] = m_Scene->getName();
         j["Entities"].push_back(entityJson);
     }
 
@@ -64,6 +65,8 @@ bool SceneSerializer::deserialize(const std::filesystem::path &filepath) {
 
     json j;
     file >> j;
+
+    m_Scene->setName(j["Name"]);
     
     for (const auto& entityJson : j["Entities"]) {
         ECS::Entity e = m_Scene->getRegistry().createEntity();

@@ -1,0 +1,5 @@
+{
+    "AssetDirectory": "TestProj/Assets",
+    "Name": "TestProj",
+    "StartScene": "Scenes/MainScene.rose"
+}

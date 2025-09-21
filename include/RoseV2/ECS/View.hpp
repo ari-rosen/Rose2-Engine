@@ -33,6 +33,14 @@ public:
     size_t size() const {
         return std::distance(begin(), end());
     }
+
+    template<typename Func>
+    requires std::regular_invocable<Func&, Components&...>
+    void forEach(Func &&f) {
+        for (auto e : *this) {
+            std::forward<Func>(f)(m_Manager->getComponent<Components>(e)...);
+        }
+    }
 private:
     ComponentManager *m_Manager;
 };

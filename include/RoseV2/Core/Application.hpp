@@ -1,7 +1,8 @@
 #pragma once
 
-#include "RoseV2/Core/AssetManager.hpp"
 #include "RoseV2/Core/Core.hpp"
+#include "RoseV2/Core/Layer.hpp"
+#include "RoseV2/Core/Timestep.hpp"
 #include "RoseV2/Core/Window.hpp"
 
 namespace RoseV2::Core {
@@ -13,14 +14,17 @@ public:
 
     ~Application();
 
+    void pushLayer(std::unique_ptr<Layer> layer);
+
     void run();
     void stop();
 
-    virtual void initImGui() {}; // for editor
-    virtual void onRender() {};
+    const std::unique_ptr<Window>& getWindow() const { return m_Window; }
 private:
     void init(const std::string& title, uint32_t width, uint32_t height);
-protected:
+    Timestep getDeltaTime();
+private:
+    std::vector<std::unique_ptr<Layer>> m_LayerStack;
     std::unique_ptr<Window> m_Window;
     bool m_Running;
 };

@@ -17,5 +17,3 @@ Makefile
 *.idea/
 .vscode/
 .DS_Store
-
-# Catch2 vendored files (keep them tracked if you copied them in)

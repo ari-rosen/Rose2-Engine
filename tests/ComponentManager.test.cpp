@@ -86,3 +86,33 @@ TEST(ECSComponentManagerTests, MultipleEntitiesComponentsRemove) {
     ASSERT_TRUE(manager.hasComponent<TransformComponent>(e2));
     ASSERT_FALSE(manager.hasComponent<SpriteComponent>(e3));
 }
+
+TEST(ECSComponentManagerTests, GetSmallestArray) {
+    ComponentManager manager;
+
+    Entity e1{0,0};
+    Entity e2{1,0};
+    Entity e3{2,0};
+    Entity e4{3,0};
+
+    manager.addComponent<TransformComponent>(e1, {glm::vec3(1,1,1)});
+    manager.addComponent<TransformComponent>(e2, {glm::vec3(2,2,2)});
+    manager.addComponent<TransformComponent>(e3, {glm::vec3(3,3,3)});
+
+    manager.addComponent<SpriteComponent>(e1, {});
+    manager.addComponent<SpriteComponent>(e2, {});
+
+    manager.addComponent<TagComponent>(e1, {});
+
+    const iComponentArray* smallest = manager.getSmallestArray<TransformComponent, SpriteComponent, TagComponent>();
+    ASSERT_NE(smallest, nullptr);
+
+    const ComponentArray<TagComponent>* tagArray = dynamic_cast<const ComponentArray<TagComponent>*>(smallest);
+    ASSERT_NE(tagArray, nullptr);
+    EXPECT_EQ(tagArray->size(), 1);
+
+    const iComponentArray* smallest2 = manager.getSmallestArray<TransformComponent, SpriteComponent>();
+    const ComponentArray<SpriteComponent>* spriteArray = dynamic_cast<const ComponentArray<SpriteComponent>*>(smallest2);
+    ASSERT_NE(spriteArray, nullptr);
+    EXPECT_EQ(spriteArray->size(), 2);
+}

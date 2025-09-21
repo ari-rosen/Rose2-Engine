@@ -1,6 +1,5 @@
 #include "RoseV2/Core/Application.hpp"
 #include "RoseV2/Core/Logger.hpp"
-#include "RoseV2/Graphics/GraphicsContext.hpp"
 #include "RoseV2/Graphics/Renderer.hpp"
 
 namespace RoseV2::Core {
@@ -33,14 +32,31 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     m_Running = true;
 }
 
+void Application::pushLayer(std::unique_ptr<Layer> layer) {
+    m_LayerStack.push_back(std::move(layer));
+}
+
+Timestep Application::getDeltaTime() {
+    static auto lastTime = std::chrono::high_resolution_clock::now();
+    auto currentTime = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<float> delta = currentTime - lastTime; // convert to seconds as float
+    lastTime = currentTime;
+    return Timestep(delta.count());
+}
+
 void Application::run() {
     Logger::log(LogLevel::Info, "Application started");
-    initImGui();
 
     while (m_Running) {
         m_Window->pollEvents();
 
-        onRender();
+        for (auto &layer : m_LayerStack) {
+            layer->onUpdate(getDeltaTime());
+        }
+
+        for (auto &layer : m_LayerStack) {
+            layer->onRender();
+        }
 
         m_Window->swapBuffers();
 

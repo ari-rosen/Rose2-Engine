@@ -27,8 +27,6 @@ static void getGLFormat(Graphics::TextureFormat format, GLenum& internalFormat, 
 }
 
 OpenGLTexture::OpenGLTexture(const std::filesystem::path &path) {
-    stbi_set_flip_vertically_on_load(true);
-
     int width, height, channels;
     stbi_uc *data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
 

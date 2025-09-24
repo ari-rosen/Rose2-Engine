@@ -19,9 +19,9 @@ std::shared_ptr<Texture> Texture::create(const std::filesystem::path &path) {
     }
 }
 
-std::shared_ptr<Texture> Texture::create() {
+std::shared_ptr<Texture> Texture::create(const TextureSpecification &spec) {
     switch (RendererAPI::getAPI()) {
-        case RendererAPI::API::OpenGL: return std::make_shared<Platform::OpenGL::OpenGLTexture>(TextureFormat::RGBA8);
+        case RendererAPI::API::OpenGL: return std::make_shared<Platform::OpenGL::OpenGLTexture>(spec);
         default: {
             Core::Logger::log(Core::LogLevel::Fatal, "Failed to create texture: No Graphics API Defined");
             std::abort();

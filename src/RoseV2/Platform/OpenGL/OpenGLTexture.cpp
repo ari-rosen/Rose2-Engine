@@ -1,4 +1,5 @@
 #include "RoseV2/Platform/OpenGL/OpenGLTexture.hpp"
+#include "RoseV2/Graphics/Texture.hpp"
 #include "RoseV2/Platform/OpenGL/OpenGLError.hpp"
 #include "RoseV2/Core/Assert.hpp"
 
@@ -57,8 +58,8 @@ OpenGLTexture::OpenGLTexture(const std::filesystem::path &path) {
     stbi_image_free(data);
 }
 
-OpenGLTexture::OpenGLTexture(Graphics::TextureFormat format)
-    : m_RendererID(0), m_Width(1), m_Height(1), m_Format(format) 
+OpenGLTexture::OpenGLTexture(const Graphics::TextureSpecification &spec)
+    : m_RendererID(0), m_Width(spec.Width), m_Height(spec.Height), m_Format(spec.Format) 
 {
     GLenum internalFormat, dataFormat;
     getGLFormat(m_Format, internalFormat, dataFormat);
@@ -66,13 +67,12 @@ OpenGLTexture::OpenGLTexture(Graphics::TextureFormat format)
     glGenTextures(1, &m_RendererID);
     glBindTexture(GL_TEXTURE_2D, m_RendererID);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    uint32_t whitePixel = 0xffffffff;
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, dataFormat, GL_UNSIGNED_BYTE, &whitePixel);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, m_Width, m_Height, 0, dataFormat, GL_UNSIGNED_BYTE, nullptr);
 }
 
 OpenGLTexture::~OpenGLTexture() {

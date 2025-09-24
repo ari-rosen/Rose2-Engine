@@ -1,7 +1,6 @@
 #include "RoseV2/Scene/SceneSerializer.hpp"
 
 #include "RoseV2/ECS/Component.hpp"
-#include "RoseV2/Core/AssetManager.hpp"
 
 #include <json.hpp>
 
@@ -15,6 +14,8 @@ SceneSerializer::SceneSerializer(std::shared_ptr<Scene> scene)
 
 void SceneSerializer::serialize(const std::filesystem::path &filepath) {
     json j;
+
+    j["Name"] = m_Scene->getName();
     
     for (auto e : m_Scene->getRegistry().view<ECS::TagComponent>()) {
         if (!m_Scene->getRegistry().isEntityAlive(e))
@@ -35,7 +36,7 @@ void SceneSerializer::serialize(const std::filesystem::path &filepath) {
         if (m_Scene->getRegistry().hasComponent<ECS::SpriteComponent>(e)) {
             const auto& s = m_Scene->getRegistry().getComponent<ECS::SpriteComponent>(e);
             entityJson["SpriteComponent"]["Color"] = { s.Color.r, s.Color.g, s.Color.b, s.Color.a };
-            entityJson["SpriteComponent"]["TexturePath"] = Core::AssetManager::get().getTexturePath(s.TextureID); 
+            entityJson["SpriteComponent"]["TextureHandle"] = (uint64_t)s.TextureHandle; 
         }
 
         if (m_Scene->getRegistry().hasComponent<ECS::CameraComponent>(e)) {
@@ -48,7 +49,6 @@ void SceneSerializer::serialize(const std::filesystem::path &filepath) {
             entityJson["CameraComponent"]["Primary"] = c.Primary;
         }
         
-        j["Name"] = m_Scene->getName();
         j["Entities"].push_back(entityJson);
     }
 
@@ -88,16 +88,10 @@ bool SceneSerializer::deserialize(const std::filesystem::path &filepath) {
 
         if (entityJson.contains("SpriteComponent")) {
             const auto& s = entityJson["SpriteComponent"];
-            uint32_t texID = 0; // default no texture
-
-            std::string path = s["TexturePath"].get<std::string>();
-            if (!path.empty()) {
-                texID = Core::AssetManager::get().loadTexture(path);
-            }
 
             m_Scene->getRegistry().addComponent(e, ECS::SpriteComponent{
                 { s["Color"][0], s["Color"][1], s["Color"][2], s["Color"][3] },
-                texID
+                s["TextureHandle"].get<uint64_t>()
             });
         }
 

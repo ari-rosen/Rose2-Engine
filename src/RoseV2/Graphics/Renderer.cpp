@@ -1,5 +1,6 @@
 #include "RoseV2/Graphics/Renderer.hpp"
 
+#include "RoseV2/Asset/AssetManager.hpp"
 #include "RoseV2/Graphics/Buffer.hpp"
 #include "RoseV2/Graphics/Camera.hpp"
 #include "RoseV2/Graphics/RenderCommand.hpp"
@@ -7,8 +8,6 @@
 #include "RoseV2/Graphics/UniformBuffer.hpp"
 #include "RoseV2/Graphics/Shader.hpp"
 #include "RoseV2/Graphics/VertexArray.hpp"
-
-#include "RoseV2/Core/AssetManager.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -62,8 +61,12 @@ void Renderer::init() {
         "src/RoseV2/Graphics/CoreShaders/TexturedQuad.vert",
         "src/RoseV2/Graphics/CoreShaders/TexturedQuad.frag"
     );
-
-    s_Data.WhiteTexture = Texture::create();
+    
+    TextureSpecification whiteTextureSpec;
+    whiteTextureSpec.Width = 1;
+    whiteTextureSpec.Height = 1;
+    whiteTextureSpec.Format = TextureFormat::RGBA8;
+    s_Data.WhiteTexture = Texture::create(whiteTextureSpec);
     uint32_t whitePixel = 0xffffffff;
     s_Data.WhiteTexture->setData(&whitePixel, sizeof(uint32_t));
 
@@ -169,13 +172,7 @@ void Renderer::beginScene(const Camera &camera) {
 }
 
 void Renderer::submitQuad(const glm::mat4 &transform, const glm::vec4 &color, uint32_t texIndex) {
-    s_Data.QuadIndexCount += 6;
-    constexpr glm::vec2 texCoords[] = {
-        {0.0f, 1.0f}, // Tex coord for Bottom-Left vertex
-        {1.0f, 1.0f}, // Tex coord for Bottom-Right vertex
-        {1.0f, 0.0f}, // Tex coord for Top-Right vertex
-        {0.0f, 0.0f}  // Tex coord for Top-Left vertex
-    };
+    constexpr glm::vec2 texCoords[] = {{0.0f,1.0f},{1.0f,1.0f},{1.0f,0.0f},{0.0f,0.0f}};
     constexpr size_t quadVertexCount = 4;
 
     if (s_Data.QuadIndexCount >= RendererData::MaxIndices) {
@@ -199,13 +196,10 @@ void Renderer::submitSprite(const ECS::TransformComponent &transform, const ECS:
     glm::mat4 scale = glm::scale(glm::mat4(1.0f), transform.Scale);
     glm::mat4 finalTransform = translation * rotation * scale;
     
-    auto &assetManager = Core::AssetManager::get();
-    
     std::shared_ptr<Texture> texture;
-    if (sprite.TextureID != 0) {
-        texture = assetManager.getTexture(sprite.TextureID);
-    }
-    else {
+    
+    texture = Asset::AssetManager::getAsset<Texture>(sprite.TextureHandle);
+    if (!texture) {
         texture = s_Data.WhiteTexture;
     }
 

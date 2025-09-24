@@ -4,14 +4,9 @@ namespace RoseV2::Graphics {
 
 enum class FramebufferTextureFormat {
 	None = 0,
-	// Color
 	RGBA8,
 	RED_INTEGER,
-
-	// Depth/stencil
 	DEPTH24STENCIL8,
-
-	// Defaults
 	Depth = DEPTH24STENCIL8
 };
 

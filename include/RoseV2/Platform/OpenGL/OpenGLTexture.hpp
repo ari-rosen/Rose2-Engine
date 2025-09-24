@@ -7,7 +7,7 @@ namespace RoseV2::Platform::OpenGL {
 class OpenGLTexture : public Graphics::Texture {
 public:    
     OpenGLTexture(const std::filesystem::path &path);
-    OpenGLTexture(Graphics::TextureFormat format);
+    OpenGLTexture(const Graphics::TextureSpecification &spec);
 
     ~OpenGLTexture();
 

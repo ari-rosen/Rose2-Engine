@@ -42,7 +42,10 @@ set(ROSEV2_SOURCES
     src/RoseV2/Core/Application.cpp
     src/RoseV2/Core/Window.cpp
     src/RoseV2/Core/Logger.cpp
-    src/RoseV2/Core/AssetManager.cpp
+    src/RoseV2/Core/UUID.cpp
+
+    src/RoseV2/Asset/EditorAssetManager.cpp
+    src/RoseV2/Asset/AssetImporter.cpp
     
     src/RoseV2/ECS/ComponentArray.cpp
     src/RoseV2/ECS/LifetimeManager.cpp
@@ -61,6 +64,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Graphics/Framebuffer.cpp
     src/RoseV2/Graphics/Texture.cpp
     
+    src/RoseV2/Project/Project.cpp
     src/RoseV2/Project/ProjectSerializer.cpp
 
     src/RoseV2/Scene/Scene.cpp

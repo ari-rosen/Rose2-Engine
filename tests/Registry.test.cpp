@@ -167,7 +167,7 @@ TEST(ECSRegistryTests, AliveEntitiesComponentsCheck) {
             EXPECT_EQ(t.Translation.x, 1.0f);
             EXPECT_EQ(t.Translation.y, 2.0f);
             EXPECT_EQ(t.Translation.z, 3.0f);
-            EXPECT_EQ(s.TextureID, 42);
+            EXPECT_EQ(s.TextureHandle, 42);
             EXPECT_EQ(s.Color.r, 1.0f);
         } else if (e == e3) {
             EXPECT_EQ(t.Translation.x, 7.0f);

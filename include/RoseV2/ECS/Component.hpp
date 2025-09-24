@@ -1,6 +1,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "RoseV2/Asset/Asset.hpp"
 #include "RoseV2/Core/Core.hpp"
 #include "RoseV2/Graphics/Camera.hpp"
 #include "RoseV2/pch.hpp"
@@ -19,7 +20,7 @@ struct ROSE_V2_API TransformComponent {
 
 struct ROSE_V2_API SpriteComponent {
     glm::vec4 Color = {1.0f, 1.0f, 1.0f, 1.0f};
-    uint32_t TextureID = 0;
+    Asset::AssetHandle TextureHandle;
 };
 
 struct ROSE_V2_API CameraComponent {

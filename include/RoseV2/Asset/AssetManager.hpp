@@ -5,9 +5,6 @@
 
 namespace RoseV2::Asset {
 
-template <typename T>
-concept AssetDerived = std::is_base_of_v<AssetBase, T>;
-
 class AssetManager {
 public:
     template <AssetDerived T>

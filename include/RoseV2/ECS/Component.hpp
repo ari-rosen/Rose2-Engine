@@ -20,7 +20,7 @@ struct ROSE_V2_API TransformComponent {
 
 struct ROSE_V2_API SpriteComponent {
     glm::vec4 Color = {1.0f, 1.0f, 1.0f, 1.0f};
-    Asset::AssetHandle TextureHandle;
+    Asset::AssetHandle TextureHandle = 0;
 };
 
 struct ROSE_V2_API CameraComponent {

@@ -25,4 +25,7 @@ public:
     virtual AssetType getAssetType() const = 0;
 };
 
+template <typename T>
+concept AssetDerived = std::is_base_of_v<AssetBase, T>;
+
 }

@@ -30,6 +30,7 @@ public:
     }
 private:
     std::shared_ptr<AssetBase> loadTexture(); 
+    std::shared_ptr<AssetBase> loadScript();
 private:
     AssetMetadata m_Metadata;
 };

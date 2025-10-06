@@ -21,6 +21,8 @@ option(ROSEV2_BUILD_TESTS "Build RoseV2 unit tests" ON)
 option(ROSEV2_USE_OPENGL "Use OpenGL as the Graphics API" ON)
 
 # --- Dependencies --- #
+
+# GLFW
 if(ROSEV2_USE_GLFW)
     set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
     set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
@@ -32,10 +34,15 @@ if(ROSEV2_USE_GLFW)
     message(STATUS "RoseV2: Using GLFW backend")
 endif()
 
+# Glad -> OpenGL
 if(ROSEV2_USE_OPENGL)
     add_subdirectory(external/glad)
     message(STATUS "RoseV2: Using OpenGL Graphics API")
 endif()
+
+# Lua
+
+add_subdirectory(external/lua)
 
 # --- Collect Sources --- #
 set(ROSEV2_SOURCES
@@ -69,6 +76,12 @@ set(ROSEV2_SOURCES
 
     src/RoseV2/Scene/Scene.cpp
     src/RoseV2/Scene/SceneSerializer.cpp
+
+    src/RoseV2/Script/LuaEngine.cpp
+    src/RoseV2/Script/ScriptInstance.cpp
+    src/RoseV2/Script/LuaRef.cpp
+    src/RoseV2/Script/ScriptGlue.cpp
+    src/RoseV2/Script/ScriptFieldRegistry.cpp
 )
 
 if(ROSEV2_USE_GLFW)
@@ -111,6 +124,8 @@ if(ROSEV2_USE_OPENGL)
     target_compile_definitions(RoseV2 PUBLIC ROSEV2_USE_OPENGL)
     target_link_libraries(RoseV2 PUBLIC glad)
 endif()
+
+target_link_libraries(RoseV2 PUBLIC lua::lib)
 
 # --- Misc --- #
 target_include_directories(RoseV2 PUBLIC
@@ -156,6 +171,7 @@ if(ROSEV2_BUILD_TESTS)
         tests/ComponentManager.test.cpp
         tests/LifetimeManager.test.cpp
         tests/Registry.test.cpp
+        tests/Lua.test.cpp
     )
 
     target_link_libraries(RoseV2Tests

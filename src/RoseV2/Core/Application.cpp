@@ -1,6 +1,7 @@
 #include "RoseV2/Core/Application.hpp"
 #include "RoseV2/Core/Logger.hpp"
 #include "RoseV2/Graphics/Renderer.hpp"
+#include "RoseV2/Script/LuaEngine.hpp"
 
 namespace RoseV2::Core {
 
@@ -15,6 +16,7 @@ Application::Application(const std::string& title, uint32_t width, uint32_t heig
 Application::~Application() {
     Logger::log(LogLevel::Info, "Application shutting down");
     Graphics::Renderer::shutdown();
+    Script::LuaEngine::shutdown();
 }
 
 
@@ -28,6 +30,8 @@ void Application::init(const std::string& title, uint32_t width, uint32_t height
     m_Window = Window::create(title, width, height);
 
     Graphics::Renderer::init();
+
+    Script::LuaEngine::init();
 
     m_Running = true;
 }
@@ -45,8 +49,6 @@ Timestep Application::getDeltaTime() {
 }
 
 void Application::run() {
-    Logger::log(LogLevel::Info, "Application started");
-
     while (m_Running) {
         m_Window->pollEvents();
 

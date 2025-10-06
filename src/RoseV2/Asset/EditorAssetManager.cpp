@@ -13,7 +13,8 @@ using json = nlohmann::json;
 static std::map<std::filesystem::path, AssetType> s_AssetExtensionMap = {
 	{ ".png", AssetType::Texture },
 	{ ".jpg", AssetType::Texture },
-	{ ".jpeg",AssetType::Texture }
+	{ ".jpeg",AssetType::Texture },
+    { ".lua", AssetType::Script }
 };
 
 static AssetType getAssetTypeFromFileExtension(const std::filesystem::path& extension) {
@@ -29,6 +30,7 @@ static std::string assetTypeToString(AssetType type) {
     switch (type) {
         case AssetType::None: return "None";
         case AssetType::Texture: return "Texture";
+        case AssetType::Script: return "Script";
         default: return "None";
     }
 }
@@ -56,7 +58,7 @@ AssetHandle EditorAssetManager::importAsset(const std::filesystem::path &path) {
         serializeAssetRegistry();
     }
     else {
-        std::string fmt = "Failed to load texture at: " + metadata.Path.string();
+        std::string fmt = "Failed to load asset at: " + metadata.Path.string();
         Core::Logger::log(Core::LogLevel::Error, fmt.c_str());
     }
 
@@ -97,7 +99,7 @@ std::shared_ptr<AssetBase> EditorAssetManager::getAsset(AssetHandle handle) {
         asset = AssetImporter(metadata).load();
 
         if(asset == nullptr) {
-            std::string fmt = "Failed to load texture from: " + metadata.Path.string();
+            std::string fmt = "Failed to load asset from: " + metadata.Path.string();
             Core::Logger::log(Core::LogLevel::Error, fmt.c_str());
         }
         else {
@@ -142,8 +144,10 @@ bool EditorAssetManager::deserializeAssetRegistry() {
         AssetHandle handle = static_cast<AssetHandle>(assetJson["Handle"].get<uint64_t>());
         
         std::string typeStr = assetJson["Type"].get<std::string>();
+
         if (typeStr == "None") metadata.Type = AssetType::None;
         else if (typeStr == "Texture") metadata.Type = AssetType::Texture;
+        else if (typeStr == "Script") metadata.Type = AssetType::Script;
         else metadata.Type = AssetType::None;
         
 

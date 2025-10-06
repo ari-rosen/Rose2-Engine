@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Core/Timestep.hpp"
 #include "RoseV2/ECS/Registry.hpp"
 #include "RoseV2/Core/Core.hpp"
 
@@ -9,10 +10,9 @@ class ROSE_V2_API Scene {
 public:
     Scene();
 
-    void onStart();
-    void onStop();
-    
-    void onRuntimeUpdate();
+    void onRuntimeStart();
+    void onRuntimeUpdate(Core::Timestep ts);
+    void onRuntimeStop();
    
     inline ECS::Registry& getRegistry() { return m_Registry; }
     

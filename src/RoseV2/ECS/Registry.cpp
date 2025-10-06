@@ -9,6 +9,8 @@ Registry::Registry() {
     m_ComponentManager.getArray<SpriteComponent>();
     m_ComponentManager.getArray<TagComponent>();
     m_ComponentManager.getArray<CameraComponent>();
+    m_ComponentManager.getArray<ScriptComponent>();
+    m_ComponentManager.getArray<UUIDComponent>();
 }
 
 Entity Registry::createEntity() {

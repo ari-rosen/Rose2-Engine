@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "RoseV2/Asset/Asset.hpp"
 #include "RoseV2/Core/Core.hpp"
+#include "RoseV2/Core/UUID.hpp"
 #include "RoseV2/Graphics/Camera.hpp"
 #include "RoseV2/pch.hpp"
 
@@ -30,6 +31,14 @@ struct ROSE_V2_API CameraComponent {
     float Bottom = -1.0f;
     float Top = 1.0f;
     bool Primary = true;
+};
+
+struct ROSE_V2_API ScriptComponent {
+    Asset::AssetHandle ScriptHandle = 0;
+};
+
+struct ROSE_V2_API UUIDComponent {
+    Core::UUID ID;
 };
 
 } // namespace RoseV2::ECS

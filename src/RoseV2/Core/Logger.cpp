@@ -6,7 +6,7 @@ void Logger::log(LogLevel level, const std::string &message) {
     std::string prefix = "[" + logLevelToString(level) + "] ";
     std::string timestamp = getTimestamp();
 
-    std::cout << "[RoseV2] " << timestamp << " | " << prefix << message << std::endl;
+    (*s_OutputStream) << "[RoseV2] " << timestamp << " | " << prefix << message << std::endl;
 
     if (level == LogLevel::Fatal) {
         std::cerr << "Fatal error occurred, aborting." << std::endl;

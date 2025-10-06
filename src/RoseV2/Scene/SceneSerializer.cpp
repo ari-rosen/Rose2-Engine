@@ -48,6 +48,16 @@ void SceneSerializer::serialize(const std::filesystem::path &filepath) {
             entityJson["CameraComponent"]["Top"] = c.Top;
             entityJson["CameraComponent"]["Primary"] = c.Primary;
         }
+
+        if (m_Scene->getRegistry().hasComponent<ECS::ScriptComponent>(e)) {
+            const auto& sc = m_Scene->getRegistry().getComponent<ECS::ScriptComponent>(e);
+            entityJson["ScriptComponent"]["ScriptHandle"] = (uint64_t)sc.ScriptHandle;
+        }
+
+        if (m_Scene->getRegistry().hasComponent<ECS::UUIDComponent>(e)) {
+            const auto& uuidComponent = m_Scene->getRegistry().getComponent<ECS::UUIDComponent>(e);
+            entityJson["UUIDComponent"]["ID"] = (uint64_t)uuidComponent.ID;
+        }
         
         j["Entities"].push_back(entityJson);
     }
@@ -99,6 +109,20 @@ bool SceneSerializer::deserialize(const std::filesystem::path &filepath) {
             const auto& c = entityJson["CameraComponent"];
             m_Scene->getRegistry().addComponent(e, ECS::CameraComponent{
                 c["Zoom"], c["Left"], c["Right"], c["Bottom"], c["Top"], c["Primary"]
+            });
+        }
+
+        if (entityJson.contains("ScriptComponent")) {
+            const auto &sc = entityJson["ScriptComponent"];
+            m_Scene->getRegistry().addComponent(e, ECS::ScriptComponent{
+                sc["ScriptHandle"].get<uint64_t>()
+            });
+        }
+
+        if (entityJson.contains("UUIDComponent")) {
+            const auto &uuidComponent = entityJson["UUIDComponent"];
+            m_Scene->getRegistry().addComponent(e, ECS::UUIDComponent{
+                uuidComponent["ID"].get<uint64_t>()
             });
         }
     }

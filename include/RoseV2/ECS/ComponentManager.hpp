@@ -34,6 +34,13 @@ public:
     bool hasComponent(Entity e) {
         return getArray<T>().has(e);
     }
+    
+    template<typename T>
+    bool hasComponent(Entity e) const {
+        auto it = m_ComponentArrays.find(std::type_index(typeid(T)));
+        if (it == m_ComponentArrays.end()) return false;
+        return static_cast<ComponentArray<T>*>(it->second.get())->has(e);
+    }
 
     template<typename ...T>
     const iComponentArray* getSmallestArray() const {

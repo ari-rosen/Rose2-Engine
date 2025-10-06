@@ -8,7 +8,8 @@ using AssetHandle = Core::UUID;
 
 enum class AssetType : uint16_t {
     None = 0,
-    Texture
+    Texture,
+    Script
 };
 
 struct AssetMetadata {

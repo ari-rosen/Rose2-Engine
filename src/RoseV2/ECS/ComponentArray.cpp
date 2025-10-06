@@ -72,5 +72,8 @@ template class ComponentArray<TagComponent>;
 template class ComponentArray<TransformComponent>;
 template class ComponentArray<SpriteComponent>;
 template class ComponentArray<CameraComponent>;
+template class ComponentArray<ScriptComponent>;
+template class ComponentArray<UUIDComponent>;
+
 
 }

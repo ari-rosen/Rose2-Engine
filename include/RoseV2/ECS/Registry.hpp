@@ -24,16 +24,22 @@ public:
 
     template<typename T>
     void removeComponent(Entity e) {
+        ROSEV2_ASSERT(m_LifetimeManager.isEntityAlive(e), "Attempt to remove a component to a destroyed entity");
         m_ComponentManager.removeComponent<T>(e);
     }
 
     template<typename T>
-    bool hasComponent(Entity e) {
+    bool hasComponent(Entity e) const {
         return m_ComponentManager.hasComponent<T>(e);
     }
 
     template<typename T>
     T& getComponent(Entity e) {
+        return m_ComponentManager.getComponent<T>(e);
+    }
+
+    template<typename T>
+    const T& getComponent(Entity e) const {
         return m_ComponentManager.getComponent<T>(e);
     }
 

@@ -1,8 +1,8 @@
 #include "RoseV2/Script/LuaEngine.hpp"
 #include "RoseV2/Asset/AssetManager.hpp"
-#include "RoseV2/Core/Logger.hpp"
 #include "RoseV2/ECS/Component.hpp"
 #include "RoseV2/Script/LuaHeaders.hpp"
+#include "RoseV2/Script/ScriptFieldRegistry.hpp"
 #include "RoseV2/Script/ScriptGlue.hpp"
 #include "RoseV2/Script/ScriptInstance.hpp"
 
@@ -10,6 +10,7 @@ namespace RoseV2::Script {
 
 lua_State* LuaEngine::s_LuaState = nullptr;
 Scene::Scene* LuaEngine::s_ActiveScene = nullptr;
+ScriptFieldRegistry LuaEngine::s_FieldRegistry{};
 
 void LuaEngine::init() {
     s_LuaState = luaL_newstate();

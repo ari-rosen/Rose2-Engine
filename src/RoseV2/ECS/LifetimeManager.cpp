@@ -14,14 +14,14 @@ Entity LifetimeManager::createEntity() {
         m_RecycledIDs.pop();
 
         auto it = m_IdToAliveGeneration.find(e.id);
-        e.generation = (it != m_IdToAliveGeneration.end()) ? it->second + 1 : 0;
+        e.generation = (it != m_IdToAliveGeneration.end()) ? it->second : 0;
     }
     else {
         e.id = m_NextID++;
         e.generation = 0;
-    }
 
-    m_IdToAliveGeneration[e.id] = e.generation;
+        m_IdToAliveGeneration[e.id] = e.generation;
+    }
     
     return e;
 }
@@ -33,7 +33,7 @@ void LifetimeManager::destroyEntity(Entity e) {
     if (genIt != m_IdToAliveGeneration.end()) {
         genIt->second++;
     }
-
+    
     m_RecycledIDs.push(e.id);
 }
 

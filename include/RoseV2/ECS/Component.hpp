@@ -41,4 +41,9 @@ struct ROSE_V2_API UUIDComponent {
     Core::UUID ID;
 };
 
+using AllComponents = std::tuple<
+    TransformComponent, SpriteComponent, TagComponent,
+    CameraComponent, ScriptComponent, UUIDComponent
+>;
+
 } // namespace RoseV2::ECS

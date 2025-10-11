@@ -24,7 +24,9 @@ private:
     static int lua_SceneIsEntityAlive(lua_State *L);
     
     static int lua_EntitySetTag(lua_State *L);
+
     static int lua_EntitySetPosition(lua_State *L);
+    static int lua_EntityGetPosition(lua_State *L);
     static int lua_EntityAddSprite(lua_State *L);
 };
 

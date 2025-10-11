@@ -20,6 +20,7 @@ public:
     inline const std::string& getName() const { return m_Name; }
 private:
     bool pushFunction(const char *functionName);
+    bool pushFields(ECS::Entity e);
     bool pushEntity(ECS::Entity e);
 private:
     std::string m_Name;

@@ -1,6 +1,7 @@
 #include "RoseV2/Script/ScriptFieldRegistry.hpp"
 #include "RoseV2/Core/UUID.hpp"
 #include "RoseV2/ECS/Component.hpp"
+#include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/Project/Project.hpp"
 #include "RoseV2/Scene/Scene.hpp"
 #include "RoseV2/Script/LuaEngine.hpp"
@@ -11,9 +12,6 @@
 namespace RoseV2::Script {
 
 using json = nlohmann::json;
-
-ScriptFieldRegistry::EntityFieldMap ScriptFieldRegistry::s_EntityFields{};
-ScriptFieldRegistry::DefaultFieldMap ScriptFieldRegistry::s_DefaultFields{};
 
 static std::string fieldTypeToString(FieldType type) {
     switch (type) {
@@ -49,25 +47,25 @@ void ScriptFieldRegistry::registerDefaultSerializableFields(const std::string& s
         lua_pop(L, 1);
     }
 
-    s_DefaultFields[scriptName] = defaults;
+    m_DefaultFields[scriptName] = defaults;
 
     lua_pop(L, 1);
 }
 
 void ScriptFieldRegistry::syncEntityFields(const std::string& scriptName, Scene::Scene &scene) {
-    auto defIt = s_DefaultFields.find(scriptName);
-    if (defIt == s_DefaultFields.end()) return;
+    auto defIt = m_DefaultFields.find(scriptName);
+    if (defIt == m_DefaultFields.end()) return;
 
     const auto& newDefaults = defIt->second;
     auto& registry = scene.getRegistry();
 
-    for (auto it = s_EntityFields.begin(); it != s_EntityFields.end(); ++it) {
-        ECS::Entity entity = it->first;
+    for (auto it = m_EntityFields.begin(); it != m_EntityFields.end(); ++it) {
+        uint64_t uuid = it->first;
+        ECS::Entity entity = scene.getEntityFromUUID(uuid);
 
-        if (!registry.isEntityAlive(entity)) {
-            it = s_EntityFields.erase(it);
-            if (it == s_EntityFields.end()) break;
-            else continue;
+        if (entity == ECS::Entity::Null() || !registry.isEntityAlive(entity)) {
+            it = m_EntityFields.erase(it);
+            continue;
         }
 
         if (!registry.hasComponent<ECS::UUIDComponent>(entity)) {
@@ -100,8 +98,8 @@ void ScriptFieldRegistry::syncEntityFields(const std::string& scriptName, Scene:
     }
 }
 
-std::vector<SerializableField>& ScriptFieldRegistry::getEntitySerializeableFields(ECS::Entity entity, const std::string &scriptName) {
-    auto& entityScriptMap = s_EntityFields[entity];
+std::vector<SerializableField>& ScriptFieldRegistry::getEntitySerializeableFields(Core::UUID uuid, const std::string &scriptName) {
+    auto& entityScriptMap = m_EntityFields[(uint64_t)uuid];
 
     auto scriptIt = entityScriptMap.find(scriptName);
 
@@ -109,9 +107,9 @@ std::vector<SerializableField>& ScriptFieldRegistry::getEntitySerializeableField
         return scriptIt->second;
     }
 
-    auto defIt = s_DefaultFields.find(scriptName);
+    auto defIt = m_DefaultFields.find(scriptName);
 
-    if (defIt != s_DefaultFields.end()) {
+    if (defIt != m_DefaultFields.end()) {
         entityScriptMap[scriptName] = defIt->second;
         return entityScriptMap[scriptName];
     }
@@ -125,7 +123,13 @@ void ScriptFieldRegistry::serializeEntityFields(Scene::Scene &scene) {
     auto path = Project::Project::getProjectDirectory() / "Fields.rosefields";
     json j;
 
-    for (const auto&[entity, fieldmap] : s_EntityFields) {
+    for (const auto&[uuid, fieldmap] : m_EntityFields) {
+        ECS::Entity entity = scene.getEntityFromUUID(uuid);
+        if (entity == ECS::Entity::Null()) {
+            continue;
+        }
+        if (!scene.getRegistry().isEntityAlive(entity)) continue;
+
         json entityJson;
         
         // UUID
@@ -133,8 +137,7 @@ void ScriptFieldRegistry::serializeEntityFields(Scene::Scene &scene) {
             scene.getRegistry().addComponent(entity, ECS::UUIDComponent{Core::UUID{}});    
         }
 
-        auto& comp = scene.getRegistry().getComponent<ECS::UUIDComponent>(entity);
-        entityJson["UUID"] = (uint64_t)comp.ID;
+        entityJson["UUID"] = uuid;
 
         for (const auto&[scriptName, fields] : fieldmap) {
             // Script Name
@@ -248,7 +251,7 @@ bool ScriptFieldRegistry::deserializeEntityFields(Scene::Scene &scene) {
                 }
             }
 
-            s_EntityFields[entity][scriptName] = fields;
+            m_EntityFields[uuid][scriptName] = fields;
         }
     }
 

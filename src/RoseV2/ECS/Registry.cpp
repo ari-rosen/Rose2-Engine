@@ -5,12 +5,12 @@
 namespace RoseV2::ECS {
 
 Registry::Registry() {
-    m_ComponentManager.getArray<TransformComponent>();
-    m_ComponentManager.getArray<SpriteComponent>();
-    m_ComponentManager.getArray<TagComponent>();
-    m_ComponentManager.getArray<CameraComponent>();
-    m_ComponentManager.getArray<ScriptComponent>();
-    m_ComponentManager.getArray<UUIDComponent>();
+    m_ComponentManager.registerComponent<TransformComponent>();
+    m_ComponentManager.registerComponent<SpriteComponent>();
+    m_ComponentManager.registerComponent<TagComponent>();
+    m_ComponentManager.registerComponent<CameraComponent>();
+    m_ComponentManager.registerComponent<ScriptComponent>();
+    m_ComponentManager.registerComponent<UUIDComponent>();
 }
 
 Entity Registry::createEntity() {

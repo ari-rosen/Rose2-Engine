@@ -11,6 +11,14 @@ namespace RoseV2::ECS {
 class ComponentManager {
 public:
     template<typename T>
+    void registerComponent() {
+        auto typeID = std::type_index(typeid(T));
+        ROSEV2_ASSERT(m_ComponentArrays.find(typeID) == m_ComponentArrays.end(), 
+                           "Component type already registered!");
+        m_ComponentArrays[typeID] = std::make_unique<ComponentArray<T>>();
+    }
+
+    template<typename T>
     void addComponent(Entity e, const T& component) {
         getArray<T>().add(e, component);
     }
@@ -31,23 +39,32 @@ public:
     }
 
     template<typename T>
-    bool hasComponent(Entity e) {
-        return getArray<T>().has(e);
+    const ComponentArray<T>* findArray() const {
+        auto it = m_ComponentArrays.find(std::type_index(typeid(T)));
+        if (it == m_ComponentArrays.end()) {
+            return nullptr;
+        }
+        return static_cast<const ComponentArray<T>*>(it->second.get());
     }
     
     template<typename T>
     bool hasComponent(Entity e) const {
-        auto it = m_ComponentArrays.find(std::type_index(typeid(T)));
-        if (it == m_ComponentArrays.end()) return false;
-        return static_cast<ComponentArray<T>*>(it->second.get())->has(e);
+        const ComponentArray<T>* array = findArray<T>();
+        if (!array)
+            return false; 
+        
+        return array->has(e);
     }
 
     template<typename ...T>
     const iComponentArray* getSmallestArray() const {
         const iComponentArray* smallestArray = nullptr;
-        std::initializer_list<const iComponentArray*> arrays = {&getArray<T>()...};
 
-        for (const auto* array : arrays) {
+        const iComponentArray* currentArrays[] = { findArray<T>()... };
+
+        for (const auto* array : currentArrays) {
+            if (!array) continue;
+
             if (!smallestArray || array->size() < smallestArray->size()) {
                 smallestArray = array;
             }

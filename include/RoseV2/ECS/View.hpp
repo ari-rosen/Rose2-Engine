@@ -3,6 +3,7 @@
 #include "RoseV2/Core/Assert.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/ECS/ComponentManager.hpp"
+#include "RoseV2/ECS/ComponentArray.hpp"
 
 namespace RoseV2::ECS {
 
@@ -19,15 +20,23 @@ public:
 
     Iterator begin() const {
         const iComponentArray* smallestArray = m_Manager->getSmallestArray<Components...>();
-        if (!smallestArray || smallestArray->size() == 0) {
+        
+        const auto* map = smallestArray ? &smallestArray->getEntityToIndexMap() : nullptr;
+
+        if (!map || map->empty()) {
             return end();
         }
-        return Iterator(m_Manager, 0, smallestArray);
+
+        return Iterator(m_Manager, map->cbegin(), map->cend());
     }
+
     Iterator end() const {
         const iComponentArray* smallestArray = m_Manager->getSmallestArray<Components...>();
-        size_t endIndex = (smallestArray ? smallestArray->size() : 0);
-        return Iterator(m_Manager, endIndex, smallestArray);
+        const auto* map = smallestArray ? &smallestArray->getEntityToIndexMap() : nullptr;
+        
+        return Iterator(m_Manager, 
+                        map ? map->cend() : typename Iterator::MapIterator(), 
+                        map ? map->cend() : typename Iterator::MapIterator());
     }
 
     size_t size() const {
@@ -45,26 +54,29 @@ private:
     ComponentManager *m_Manager;
 };
 
+// ====================================================================
+
 template<typename... Components>
 class View<Components...>::Iterator {
 public:
     using iterator_category = std::forward_iterator_tag;
     using difference_type   = std::ptrdiff_t;
     using value_type        = Entity;
-    using pointer           = Entity*;
-    using reference         = Entity&;
+    
+    using MapType = std::unordered_map<Entity, uint32_t, EntityHash>;
+    using MapIterator = MapType::const_iterator;
 public:
-    Iterator(ComponentManager *manager, size_t startIndex, const iComponentArray *smallestArray)
-        : m_Manager(manager), m_CurrentIndex(startIndex), m_SmallestArray(smallestArray)
+    Iterator(ComponentManager *manager, MapIterator current, MapIterator end)
+        : m_Manager(manager), m_CurrentIt(current), m_EndIt(end)
     {
-        if (m_Manager && m_SmallestArray) {
+        if (m_CurrentIt != m_EndIt) {
             findNextValidEntity();
         }
     }
 
     Iterator& operator++() {
-        if (m_SmallestArray) {
-            m_CurrentIndex++;
+        if (m_CurrentIt != m_EndIt) {
+            ++m_CurrentIt;
             findNextValidEntity();
         }
         return *this;
@@ -77,37 +89,34 @@ public:
     }
 
     value_type operator*() {
-        ROSEV2_ASSERT(!m_SmallestArray || m_CurrentIndex < m_SmallestArray->size(), "View iterator dereferenced out of range");
-        return m_SmallestArray->getOwner(m_CurrentIndex);
+        ROSEV2_ASSERT(m_CurrentIt != m_EndIt, "View iterator dereferenced out of range");
+        return m_CurrentIt->first;
     }
 
-    bool operator==(const Iterator &other) {
-        return m_CurrentIndex == other.m_CurrentIndex
-            && m_SmallestArray == other.m_SmallestArray
-            && m_Manager == other.m_Manager;
+    bool operator==(const Iterator &other) const {
+        return m_CurrentIt == other.m_CurrentIt;
     }
 
-    bool operator!=(const Iterator &other) {
+    bool operator!=(const Iterator &other) const {
         return !(*this == other);
     }
 
 private:
     void findNextValidEntity() {
-        if (!m_SmallestArray) return;
+        while (m_CurrentIt != m_EndIt) {
+            value_type entity = m_CurrentIt->first;
 
-        while (m_CurrentIndex < m_SmallestArray->size()) {
-            value_type entity = m_SmallestArray->getOwner(m_CurrentIndex);
             if (m_Manager->hasAllComponents<Components...>(entity)) {
                 return;
             }
-            ++m_CurrentIndex;
+            ++m_CurrentIt;
         }
     }
 
 private:
     ComponentManager *m_Manager = nullptr;
-    const iComponentArray* m_SmallestArray = nullptr;
-    size_t m_CurrentIndex = 0;
+    MapIterator m_CurrentIt;
+    MapIterator m_EndIt;
 };
 
 }

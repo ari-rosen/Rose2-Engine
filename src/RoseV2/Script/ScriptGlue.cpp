@@ -31,6 +31,9 @@ void ScriptGlue::registerLuaFunctions() {
     
     lua_pushcfunction(L, lua_EntitySetPosition);
     lua_setfield(L, -2, "setPosition");
+
+    lua_pushcfunction(L, lua_EntityGetPosition);
+    lua_setfield(L, -2, "getPosition");
     
     lua_pushvalue(L, -1);
     lua_setfield(L, -2, "__index");
@@ -90,10 +93,10 @@ int ScriptGlue::lua_EntitySetTag(lua_State* L) {
     const char* tag = luaL_checkstring(L, 2);
 
     auto& registry = *luaEnt->Registry;
-    if (!registry.hasComponent<RoseV2::ECS::TagComponent>(luaEnt->Entity)) {
-        registry.addComponent(luaEnt->Entity, RoseV2::ECS::TagComponent{tag});
+    if (!registry.hasComponent<ECS::TagComponent>(luaEnt->Entity)) {
+        registry.addComponent(luaEnt->Entity, ECS::TagComponent{tag});
     } else {
-        auto& tc = registry.getComponent<RoseV2::ECS::TagComponent>(luaEnt->Entity);
+        auto& tc = registry.getComponent<ECS::TagComponent>(luaEnt->Entity);
         tc.Tag = tag;
     }
 
@@ -107,11 +110,35 @@ int ScriptGlue::lua_EntitySetPosition(lua_State* L) {
     float z = (float)luaL_checknumber(L, 4);
 
     auto& registry = *luaEnt->Registry;
-    auto& transform = registry.getComponent<RoseV2::ECS::TransformComponent>(luaEnt->Entity);
+    auto& transform = registry.getComponent<ECS::TransformComponent>(luaEnt->Entity);
 
     transform.Translation = {x, y, z};
 
     return 0;
+}
+
+int ScriptGlue::lua_EntityGetPosition(lua_State* L) {
+    auto *luaEnt = checkEntity(L, 1);
+    auto &registry = *luaEnt->Registry;
+    
+    if (!registry.hasComponent<ECS::TransformComponent>(luaEnt->Entity)) {
+        return luaL_error(L, "Entity has no TransformComponent");
+    }
+
+    auto& transform = registry.getComponent<ECS::TransformComponent>(luaEnt->Entity);
+
+    lua_newtable(L);
+
+    lua_pushnumber(L, transform.Translation.x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, transform.Translation.y);
+    lua_setfield(L, -2, "y");
+
+    lua_pushnumber(L, transform.Translation.z);
+    lua_setfield(L, -2, "z");
+
+    return 1;
 }
 
 

@@ -6,9 +6,7 @@
 
 namespace RoseV2::Scene {
 
-Scene::Scene()
-    : m_IsRunning(false)
-{}
+Scene::Scene() : m_IsRunning(false) {}
 
 void Scene::onRuntimeStart() {
     m_IsRunning = true;
@@ -33,6 +31,14 @@ void Scene::onRuntimeUpdate(Core::Timestep ts) {
             Script::LuaEngine::onUpdateEntity(e, ts);
         }
     }
+}
+
+ECS::Entity Scene::getEntityFromUUID(const Core::UUID &uuid) {
+    for (auto e : m_Registry.view<ECS::UUIDComponent>()) {
+        if ((uint64_t)m_Registry.getComponent<ECS::UUIDComponent>(e).ID == uuid)
+            return e;
+    }
+    return ECS::Entity::Null();
 }
 
 }

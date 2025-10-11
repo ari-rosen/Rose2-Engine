@@ -155,7 +155,7 @@ void Renderer::flushBatch() {
     s_Data.QuadShader->bind();
     s_Data.QuadShader->setUniformIntArray("u_Textures", samplers, s_Data.TextureSlotIndex);
 
-    RenderCommand::drawIndexed(s_Data.QuadVertexArray);
+    RenderCommand::drawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
 
     s_Data.QuadIndexCount = 0;
     s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase.get();

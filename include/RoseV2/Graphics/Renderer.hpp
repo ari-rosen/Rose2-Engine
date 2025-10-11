@@ -12,12 +12,11 @@ public:
     static void shutdown();
 
     static void beginScene(const Camera &camera);
-
-    static void submitQuad(const glm::mat4 &transform, const glm::vec4 &color, uint32_t texIndex);
     static void submitSprite(const ECS::TransformComponent &transform, const ECS::SpriteComponent &sprite);
-
     static void endScene();
 private:
+    static void submitQuad(const glm::mat4 &transform, const glm::vec4 &color, uint32_t texIndex);
+
     static void beginBatch();
     static void flushBatch();
 };

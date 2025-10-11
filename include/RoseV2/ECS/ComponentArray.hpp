@@ -15,6 +15,7 @@ public:
     virtual bool has(Entity e) const = 0;
     virtual size_t size() const = 0;
     virtual Entity getOwner(size_t index) const = 0;
+    virtual const std::unordered_map<Entity, uint32_t, EntityHash>& getEntityToIndexMap() const = 0;
 };
 
 template<typename T>
@@ -29,12 +30,12 @@ public:
     bool has(Entity e) const override;
     size_t size() const override;
     Entity getOwner(size_t index) const override;
-    
-    const std::unordered_map<uint32_t, uint32_t>& getEntityToIndexMap() const;
+
+    const std::unordered_map<Entity, uint32_t, EntityHash>& getEntityToIndexMap() const override;
 private:
     std::vector<T> m_Components;
     std::vector<Entity> m_Owners;
-    std::unordered_map<uint32_t, uint32_t> m_EntityToIndexMap;
+    std::unordered_map<Entity, uint32_t, EntityHash> m_EntityToIndexMap;
 };
 
 } // namespace RoseV2::ECS

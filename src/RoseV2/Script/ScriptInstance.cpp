@@ -1,8 +1,8 @@
 #include "RoseV2/Script/ScriptInstance.hpp"
 #include "RoseV2/Core/Logger.hpp"
+#include "RoseV2/ECS/Component.hpp"
 #include "RoseV2/Script/LuaEngine.hpp"
 #include "RoseV2/Script/LuaHeaders.hpp"
-#include "RoseV2/Script/ScriptFieldRegistry.hpp"
 #include "RoseV2/Script/ScriptGlue.hpp"
 
 namespace RoseV2::Script {
@@ -77,14 +77,15 @@ bool ScriptInstance::pushEntity(ECS::Entity e) {
     return true;
 }
 
-void ScriptInstance::invokeOnStart(ECS::Entity e) {
+bool ScriptInstance::pushFields(ECS::Entity e) {
     lua_State *L = LuaEngine::getLuaState();
 
-    if (!m_TableRef.valid()) return;
+    if (!m_TableRef.valid()) return false;
 
     m_TableRef.push();
     
-    auto &allFields = ScriptFieldRegistry::getEntitySerializeableFields(e, m_Name);
+    uint64_t uuid = LuaEngine::getActiveScene()->getRegistry().getComponent<ECS::UUIDComponent>(e).ID;
+    auto &allFields = LuaEngine::getFieldRegistry().getEntitySerializeableFields(uuid, m_Name);
 
     for (auto &field : allFields) {
         switch (field.Type) {
@@ -103,7 +104,14 @@ void ScriptInstance::invokeOnStart(ECS::Entity e) {
     }
 
     lua_pop(L, 1);
+    
+    return true;
+}
 
+void ScriptInstance::invokeOnStart(ECS::Entity e) {
+    lua_State *L = LuaEngine::getLuaState();
+    
+    if (!pushFields(e)) return;
     if (!m_TableRef.valid()) return;
     if (!pushFunction("onStart")) return;
     if (!pushEntity(e)) return;
@@ -117,12 +125,13 @@ void ScriptInstance::invokeOnStart(ECS::Entity e) {
 
 void ScriptInstance::invokeOnUpdate(ECS::Entity e, Core::Timestep ts) {
     lua_State *L = LuaEngine::getLuaState();
-
+    
+    if (!pushFields(e)) return;
     if (!m_TableRef.valid()) return;
     if (!pushFunction("onUpdate")) return;
     if (!pushEntity(e)) return;
 
-    lua_pushnumber(L, ts.getMiliseconds());
+    lua_pushnumber(L, ts.getSeconds());
 
     if (lua_pcall(L, 3, 0, 0) != LUA_OK) {
         std::string errorFmt = "Lua OnUpdate error: " + std::string{lua_tostring(L, -1)} + "\n";

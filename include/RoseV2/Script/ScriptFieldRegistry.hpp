@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RoseV2/Core/UUID.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/Scene/Scene.hpp"
 namespace RoseV2::Script {
@@ -14,24 +15,23 @@ struct SerializableField {
 
 class ScriptFieldRegistry {
 public:
-    // Maps an Entity to a Map which maps a (script) name to a list of fields
-    using EntityFieldMap = std::unordered_map<
-        ECS::Entity, 
-        std::unordered_map<std::string, std::vector<SerializableField>>, 
-        ECS::EntityHash>;
+    // Maps an UUID to a Map which maps a (script) name to a list of fields
+    using UUIDFieldMap = std::unordered_map<
+        uint64_t, 
+        std::unordered_map<std::string, std::vector<SerializableField>>>;
     
     // Maps a script's name to its default fields
     using DefaultFieldMap = std::unordered_map<std::string, std::vector<SerializableField>>;
     
-    static void registerDefaultSerializableFields(const std::string &scriptName);
-    static void syncEntityFields(const std::string &scriptName, Scene::Scene &scene);
-    static std::vector<SerializableField>& getEntitySerializeableFields(ECS::Entity entity, const std::string &scriptName);
+    void registerDefaultSerializableFields(const std::string &scriptName);
+    void syncEntityFields(const std::string &scriptName, Scene::Scene &scene);
+    std::vector<SerializableField>& getEntitySerializeableFields(Core::UUID uuid, const std::string &scriptName);
 
-    static void serializeEntityFields(Scene::Scene &scene);
-    static bool deserializeEntityFields(Scene::Scene &scene);
+    void serializeEntityFields(Scene::Scene &scene);
+    bool deserializeEntityFields(Scene::Scene &scene);
 private:
-    static EntityFieldMap s_EntityFields; // Per entity overloads
-    static DefaultFieldMap s_DefaultFields; // default script fields
+    UUIDFieldMap m_EntityFields{}; // Per entity overloads
+    DefaultFieldMap m_DefaultFields{}; // default script fields
 };
 
 }

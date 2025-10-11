@@ -12,7 +12,7 @@ public:
     static void setClearColor(float r, float g, float b);
     static void clear(); 
 
-    static void drawIndexed(const std::shared_ptr<VertexArray> &vertexArray);
+    static void drawIndexed(const std::shared_ptr<VertexArray> &vertexArray, uint32_t indexCount);
 
 
 private:

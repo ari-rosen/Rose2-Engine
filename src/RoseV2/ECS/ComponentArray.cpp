@@ -10,7 +10,7 @@ void ComponentArray<T>::add(Entity e, const T &component) {
     size_t index = m_Components.size();
     m_Components.push_back(component);
     m_Owners.push_back(e);
-    m_EntityToIndexMap[e.id] = index;
+    m_EntityToIndexMap[e] = index;
 }
 
 template<typename T>
@@ -18,15 +18,17 @@ void ComponentArray<T>::remove(Entity e) {
     ROSEV2_ASSERT(has(e), "Attempt to remove a nonexistent component");
     ROSEV2_ASSERT(!m_Components.empty(), "Attempt to remove a component from an empty array");
 
-    auto it = m_EntityToIndexMap.find(e.id);
+    auto it = m_EntityToIndexMap.find(e);
     if (it == m_EntityToIndexMap.end()) return;
 
     size_t index = it->second;
     size_t last = m_Components.size() - 1;
 
-    m_Components[index] = m_Components[last];
-    m_Owners[index] = m_Owners[last];
-    m_EntityToIndexMap[m_Owners[index].id] = index;
+    if (index != last) {
+        std::swap(m_Components[index], m_Components[last]);
+        std::swap(m_Owners[index], m_Owners[last]);
+        m_EntityToIndexMap[m_Owners[index]] = index;
+    }
 
     m_Components.pop_back();
     m_Owners.pop_back();
@@ -37,19 +39,19 @@ template<typename T>
 T& ComponentArray<T>::get(Entity e) {
     ROSEV2_ASSERT(has(e), "Attempt to access a component that an Entity does not have");
     
-    return m_Components[m_EntityToIndexMap.at(e.id)];
+    return m_Components[m_EntityToIndexMap.at(e)];
 }
 
 template<typename T>
 const T& ComponentArray<T>::get(Entity e) const {
     ROSEV2_ASSERT(has(e), "Attempt to access a component that an Entity does not have");
     
-    return m_Components[m_EntityToIndexMap.at(e.id)];
+    return m_Components[m_EntityToIndexMap.at(e)];
 }
 
 template<typename T>
 bool ComponentArray<T>::has(Entity e) const {
-    return m_EntityToIndexMap.count(e.id) > 0;    
+    return m_EntityToIndexMap.count(e) > 0;    
 }
 
 template<typename T>
@@ -64,7 +66,7 @@ Entity ComponentArray<T>::getOwner(size_t index) const {
 }
 
 template<typename T>
-const std::unordered_map<uint32_t, uint32_t>& ComponentArray<T>::getEntityToIndexMap() const {
+const std::unordered_map<Entity, uint32_t, EntityHash>& ComponentArray<T>::getEntityToIndexMap() const {
     return m_EntityToIndexMap;
 }
 

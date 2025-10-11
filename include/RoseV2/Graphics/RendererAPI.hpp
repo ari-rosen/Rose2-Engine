@@ -19,7 +19,7 @@ public:
     virtual void setClearColor(float r, float g, float b) = 0;
     virtual void clear() = 0;
 
-    virtual void drawIndexed(const std::shared_ptr<VertexArray> &vertexArray) = 0;
+    virtual void drawIndexed(const std::shared_ptr<VertexArray> &vertexArray, uint32_t indexCount) = 0;
 
 protected:
     static API s_API;

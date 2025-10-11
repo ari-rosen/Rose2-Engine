@@ -49,7 +49,6 @@ void OpenGLFramebuffer::invalidate() {
 
     bool hasDepth = false;
 
-    // Create color attachments
     m_ColorAttachments.resize(m_Spec.Attachments.size());
     for (size_t i = 0; i < m_Spec.Attachments.size(); i++) {
         const auto& spec = m_Spec.Attachments[i];
@@ -69,7 +68,6 @@ void OpenGLFramebuffer::invalidate() {
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (GLenum)i, GL_TEXTURE_2D, m_ColorAttachments[i], 0);
     }
 
-    // Create depth attachment if needed
     if (hasDepth) {
         glGenTextures(1, &m_DepthAttachment);
         glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
@@ -78,7 +76,7 @@ void OpenGLFramebuffer::invalidate() {
     }
 
     if (m_ColorAttachments.size() > 1) {
-        GLenum buffers[16]; // max 16 color attachments
+        GLenum buffers[16];
         for (size_t i = 0; i < m_ColorAttachments.size(); i++)
             buffers[i] = GL_COLOR_ATTACHMENT0 + (GLenum)i;
         glDrawBuffers((GLsizei)m_ColorAttachments.size(), buffers);

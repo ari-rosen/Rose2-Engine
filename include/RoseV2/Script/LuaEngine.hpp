@@ -3,6 +3,7 @@
 #include "RoseV2/Core/Timestep.hpp"
 #include "RoseV2/ECS/Entity.hpp"
 #include "RoseV2/Scene/Scene.hpp"
+#include "RoseV2/Script/ScriptFieldRegistry.hpp"
 
 struct lua_State;
 
@@ -21,9 +22,11 @@ public:
 
     static inline lua_State* getLuaState() { return s_LuaState; }
     static inline Scene::Scene* getActiveScene() { return s_ActiveScene; }
+    static inline ScriptFieldRegistry& getFieldRegistry() { return s_FieldRegistry; }
 private:
     static lua_State* s_LuaState;
     static Scene::Scene* s_ActiveScene;
+    static ScriptFieldRegistry s_FieldRegistry;
 };
 
 };

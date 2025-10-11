@@ -1,6 +1,7 @@
 #pragma once
 
 #include "RoseV2/Core/Timestep.hpp"
+#include "RoseV2/Core/UUID.hpp"
 #include "RoseV2/ECS/Registry.hpp"
 #include "RoseV2/Core/Core.hpp"
 
@@ -13,6 +14,8 @@ public:
     void onRuntimeStart();
     void onRuntimeUpdate(Core::Timestep ts);
     void onRuntimeStop();
+
+    ECS::Entity getEntityFromUUID(const Core::UUID &uuid);
    
     inline ECS::Registry& getRegistry() { return m_Registry; }
     
@@ -21,6 +24,7 @@ public:
 private:
     bool m_IsRunning;
     std::string m_Name;
+
     ECS::Registry m_Registry;
 };
 

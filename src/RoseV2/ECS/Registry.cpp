@@ -5,12 +5,10 @@
 namespace RoseV2::ECS {
 
 Registry::Registry() {
-    m_ComponentManager.registerComponent<TransformComponent>();
-    m_ComponentManager.registerComponent<SpriteComponent>();
-    m_ComponentManager.registerComponent<TagComponent>();
-    m_ComponentManager.registerComponent<CameraComponent>();
-    m_ComponentManager.registerComponent<ScriptComponent>();
-    m_ComponentManager.registerComponent<UUIDComponent>();
+    auto registerComponents = [this](auto &&... components) {
+        (m_ComponentManager.registerComponent<std::decay_t<decltype(components)>>(), ...);
+    };
+    std::apply(registerComponents, AllComponents{});
 }
 
 Entity Registry::createEntity() {

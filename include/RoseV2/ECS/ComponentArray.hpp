@@ -21,17 +21,63 @@ public:
 template<typename T>
 class ComponentArray : public iComponentArray {
 public:
-    void add(Entity e, const T& component);
-    void remove(Entity e) override;
+    void add(Entity e, const T& component) {
+        ROSEV2_ASSERT(!has(e), "Attempt to add the same component to an Entity twice");
+    
+        size_t index = m_Components.size();
+        m_Components.push_back(component);
+        m_Owners.push_back(e);
+        m_EntityToIndexMap[e] = index;
+    }
 
-    T& get(Entity e);
-    const T& get(Entity e) const;
+    void remove(Entity e) override {
+        ROSEV2_ASSERT(has(e), "Attempt to remove a nonexistent component");
+        ROSEV2_ASSERT(!m_Components.empty(), "Attempt to remove a component from an empty array");
+    
+        auto it = m_EntityToIndexMap.find(e);
+        if (it == m_EntityToIndexMap.end()) return;
+    
+        size_t index = it->second;
+        size_t last = m_Components.size() - 1;
+    
+        if (index != last) {
+            std::swap(m_Components[index], m_Components[last]);
+            std::swap(m_Owners[index], m_Owners[last]);
+            m_EntityToIndexMap[m_Owners[index]] = index;
+        }
+    
+        m_Components.pop_back();
+        m_Owners.pop_back();
+        m_EntityToIndexMap.erase(it);
+    }
+
+    T& get(Entity e) {
+        ROSEV2_ASSERT(has(e), "Attempt to access a component that an Entity does not have");
+        return m_Components[m_EntityToIndexMap.at(e)];
+    }
+
+    const T& get(Entity e) const {
+        ROSEV2_ASSERT(has(e), "Attempt to access a component that an Entity does not have");
+    
+        return m_Components[m_EntityToIndexMap.at(e)];
+    }
         
-    bool has(Entity e) const override;
-    size_t size() const override;
-    Entity getOwner(size_t index) const override;
+    bool has(Entity e) const override {
+        return m_EntityToIndexMap.contains(e);    
+    }
 
-    const std::unordered_map<Entity, uint32_t, EntityHash>& getEntityToIndexMap() const override;
+    size_t size() const override {
+        return m_Components.size();
+    }
+
+    Entity getOwner(size_t index) const override {
+        ROSEV2_ASSERT(index < m_Owners.size(), "Index out of bounds");
+        return m_Owners[index];
+    }
+
+    inline const std::unordered_map<Entity, uint32_t, EntityHash>& getEntityToIndexMap() const override {
+        return m_EntityToIndexMap;
+    }
 private:
     std::vector<T> m_Components;
     std::vector<Entity> m_Owners;

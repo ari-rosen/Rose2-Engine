@@ -34,7 +34,7 @@ if(ROSEV2_USE_GLFW)
     message(STATUS "RoseV2: Using GLFW backend")
 endif()
 
-# Glad -> OpenGL
+# Glad (OpenGL)
 if(ROSEV2_USE_OPENGL)
     add_subdirectory(external/glad)
     message(STATUS "RoseV2: Using OpenGL Graphics API")
@@ -54,7 +54,6 @@ set(ROSEV2_SOURCES
     src/RoseV2/Asset/EditorAssetManager.cpp
     src/RoseV2/Asset/AssetImporter.cpp
     
-    src/RoseV2/ECS/ComponentArray.cpp
     src/RoseV2/ECS/LifetimeManager.cpp
     src/RoseV2/ECS/Registry.cpp
     src/RoseV2/ECS/ComponentManager.cpp

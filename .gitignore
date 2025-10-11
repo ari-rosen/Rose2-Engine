@@ -5,10 +5,10 @@
 /lib/
 
 # CMake generated files
-CMakeFiles/
-CMakeCache.txt
-cmake_install.cmake
-Makefile
+**/CMakeFiles/
+**/CMakeCache.txt
+**/cmake_install.cmake
+**/Makefile
 
 # IDE files
 *.swp
@@ -16,4 +16,12 @@ Makefile
 *.user
 *.idea/
 .vscode/
+
+# OS files
 .DS_Store
+Thumbs.db
+
+# Submodule generated build artifacts
+external/*/build/
+external/*/bin/
+external/*/lib/

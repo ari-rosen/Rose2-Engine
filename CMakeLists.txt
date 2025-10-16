@@ -81,6 +81,7 @@ set(ROSEV2_SOURCES
     src/RoseV2/Script/LuaRef.cpp
     src/RoseV2/Script/ScriptGlue.cpp
     src/RoseV2/Script/ScriptFieldRegistry.cpp
+    src/RoseV2/Script/RuntimeEntityTables.cpp
 )
 
 if(ROSEV2_USE_GLFW)

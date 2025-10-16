@@ -11,7 +11,7 @@ class ScriptInstance : public Asset::AssetBase {
 public:
     ScriptInstance(const std::string &name);
 
-    bool loadSource(const std::string &source);
+    bool loadSource(const std::vector<std::byte> &bytecode);
 
     void invokeOnStart(ECS::Entity e);
     void invokeOnUpdate(ECS::Entity e, Core::Timestep ts);
@@ -20,7 +20,6 @@ public:
     inline const std::string& getName() const { return m_Name; }
 private:
     bool pushFunction(const char *functionName);
-    bool pushFields(ECS::Entity e);
     bool pushEntity(ECS::Entity e);
 private:
     std::string m_Name;

@@ -10,14 +10,20 @@ namespace RoseV2::Script {
 ScriptInstance::ScriptInstance(const std::string &name)
     : m_Name(name) {}
 
-bool ScriptInstance::loadSource(const std::string &source) {
+bool ScriptInstance::loadSource(const std::vector<std::byte> &bytecode) {
     if (m_TableRef.valid()) {
         m_TableRef.reset(); 
     }
 
     lua_State *L = LuaEngine::getLuaState();
 
-    if (luaL_loadstring(L, source.c_str()) != LUA_OK) {
+    if (luaL_loadbuffer(
+            L, 
+            reinterpret_cast<const char *>(bytecode.data()),
+            bytecode.size(),
+            m_Name.c_str())
+        != LUA_OK) 
+    {
         Core::Logger::log(Core::LogLevel::Error, lua_tostring(L, -1));
         lua_pop(L, 1);
         return false;
@@ -43,20 +49,11 @@ bool ScriptInstance::pushFunction(const char *functionName) {
     lua_State *L = LuaEngine::getLuaState();
 
     m_TableRef.push();
-
-    if (!lua_istable(L, -1)) {
-        lua_pop(L, 1);
-        return false;
-    }
-
     lua_getfield(L, -1, functionName);
+    lua_remove(L, -2);
 
-    if (!lua_isfunction(L, -1)) {
-        lua_pop(L, 2); 
+    if (!lua_isfunction(L, -1))
         return false;
-    }
-
-    lua_insert(L, -2);
 
     return true;
 }
@@ -77,45 +74,17 @@ bool ScriptInstance::pushEntity(ECS::Entity e) {
     return true;
 }
 
-bool ScriptInstance::pushFields(ECS::Entity e) {
-    lua_State *L = LuaEngine::getLuaState();
-
-    if (!m_TableRef.valid()) return false;
-
-    m_TableRef.push();
-    
-    uint64_t uuid = LuaEngine::getActiveScene()->getRegistry().getComponent<ECS::UUIDComponent>(e).ID;
-    auto &allFields = LuaEngine::getFieldRegistry().getEntitySerializeableFields(uuid, m_Name);
-
-    for (auto &field : allFields) {
-        switch (field.Type) {
-            case FieldType::Number:
-                lua_pushnumber(L, std::get<double>(field.DefaultValue));
-                break;
-            case FieldType::Bool:
-                lua_pushboolean(L, std::get<bool>(field.DefaultValue));
-                break;
-            case FieldType::String:
-                lua_pushstring(L, std::get<std::string>(field.DefaultValue).c_str());
-                break;
-        }
-        
-        lua_setfield(L, -2, field.Name.c_str());
-    }
-
-    lua_pop(L, 1);
-    
-    return true;
-}
-
 void ScriptInstance::invokeOnStart(ECS::Entity e) {
     lua_State *L = LuaEngine::getLuaState();
-    
-    if (!pushFields(e)) return;
-    if (!m_TableRef.valid()) return;
-    if (!pushFunction("onStart")) return;
-    if (!pushEntity(e)) return;
 
+    auto uuid = LuaEngine::getActiveScene()->getRegistry().getComponent<ECS::UUIDComponent>(e).ID;
+    LuaRef& entityTable = LuaEngine::getRuntimeEntityTables().getEntityTable(uuid, m_Name);
+    
+    if (!pushFunction("onStart")) return; // start function
+    entityTable.push(); // entity fields (self)
+    if (!pushEntity(e)) return; // entity metatable
+    
+    // call function
     if (lua_pcall(L, 2, 0, 0) != LUA_OK) {
         std::string errorFmt = "Lua OnStart error: " + std::string{lua_tostring(L, -1)} + "\n";
         Core::Logger::log(Core::LogLevel::Error, errorFmt);
@@ -126,13 +95,15 @@ void ScriptInstance::invokeOnStart(ECS::Entity e) {
 void ScriptInstance::invokeOnUpdate(ECS::Entity e, Core::Timestep ts) {
     lua_State *L = LuaEngine::getLuaState();
     
-    if (!pushFields(e)) return;
-    if (!m_TableRef.valid()) return;
-    if (!pushFunction("onUpdate")) return;
-    if (!pushEntity(e)) return;
+    auto uuid = LuaEngine::getActiveScene()->getRegistry().getComponent<ECS::UUIDComponent>(e).ID;
+    LuaRef& entityTable = LuaEngine::getRuntimeEntityTables().getEntityTable(uuid, m_Name);
 
-    lua_pushnumber(L, ts.getSeconds());
-
+    if (!pushFunction("onUpdate")) return; // onupdate function
+    entityTable.push(); // entity fields
+    if (!pushEntity(e)) return; // entity metatable
+    lua_pushnumber(L, ts.getSeconds()); // deltatime
+    
+    // call function
     if (lua_pcall(L, 3, 0, 0) != LUA_OK) {
         std::string errorFmt = "Lua OnUpdate error: " + std::string{lua_tostring(L, -1)} + "\n";
         Core::Logger::log(Core::LogLevel::Error, errorFmt);
